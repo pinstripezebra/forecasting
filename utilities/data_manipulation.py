@@ -77,3 +77,6 @@ def plot_results(dataset, target_val, model_type):
     fig.update_layout(title = "Predicted vs. Actual, {model}".format(model = model_type))
 
     fig.show()
+
+def timeseries_split(input_df, train_ratio):
+    '''performs time based test/train split'''
