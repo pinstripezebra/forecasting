@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-
+import plotly.graph_objects as go
 
 def convert_to_supervised(data, n_in=1, n_out=1, dropnan=True):
  
@@ -54,19 +54,25 @@ def pivot_dataframe(input_df, identifier_col, value_col):
     return output_df
 
 
-def plot_results(trainPredict, testPredict, dataset, timesteps, scaler):
+def plot_results(dataset, target_val, model_type):
 
-    # shift train predictions for plotting
-    trainPredictPlot = np.empty_like(dataset)
-    trainPredictPlot[:, :] = np.nan
-    trainPredictPlot[timesteps:len(trainPredict)+timesteps, :] = trainPredict
-    # shift test predictions for plotting
-    testPredictPlot = np.empty_like(dataset)
-    testPredictPlot[:, :] = np.nan
-    testPredictPlot[len(trainPredict)+(timesteps*2)+1:len(dataset)-1, :] = testPredict
+    # Create traces
+    fig = go.Figure()
+    
+    train_df = dataset[dataset['Prediction_Type'] == 'Train']
+    test_df= dataset[dataset['Prediction_Type'] == 'Test']
 
-    # plot baseline and predictions
-    plt.plot(scaler.inverse_transform(dataset))
-    plt.plot(trainPredictPlot)
-    plt.plot(testPredictPlot)
-    plt.show()
+    # Adding plot of original_df
+    fig.add_trace(go.Scatter(x=dataset['Date'], y=dataset[target_val],
+                        mode='lines',
+                        name='Actual'))
+    
+    fig.add_trace(go.Scatter(x=train_df['Date'], y=train_df[target_val],
+                        mode='lines+markers',
+                        name='Train Prediction'))
+    
+    fig.add_trace(go.Scatter(x=test_df['Date'], y=test_df[target_val],
+                        mode='markers', name='Test Prediction'))
+    fig.update_layout(title = "Predicted vs. Actual, {model}".format(model = model_type))
+
+    fig.show()
