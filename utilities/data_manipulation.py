@@ -1,4 +1,7 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 def convert_to_supervised(data, n_in=1, n_out=1, dropnan=True):
  
@@ -22,7 +25,7 @@ def convert_to_supervised(data, n_in=1, n_out=1, dropnan=True):
         agg.dropna(inplace=True)
     return agg.values
 
-def rename_dataframe_supervised(data_df, state_name = None):
+def rename_dataframe_supervised(data_df, state_name = ""):
 
    '''Takes a dataframe with column names 1-x, relables them as t through t - x
    and returns. Used to illustrate how the timeseries to supervised conversion works'''
@@ -40,7 +43,7 @@ def pivot_dataframe(input_df, identifier_col, value_col):
 
     '''Takes multilevel time-series dataframe with identifier_col specifying unique time series and returns
     wide dataframe with each level in time identifier_col as separate column'''
-    
+
     unique_vals = input_df[identifier_col].drop_duplicates().to_list()
     independent_series = {}
     for val in unique_vals:
@@ -49,3 +52,21 @@ def pivot_dataframe(input_df, identifier_col, value_col):
     output_df['Date'] = input_df['Date'].drop_duplicates().to_list()
 
     return output_df
+
+
+def plot_results(trainPredict, testPredict, dataset, timesteps, scaler):
+
+    # shift train predictions for plotting
+    trainPredictPlot = np.empty_like(dataset)
+    trainPredictPlot[:, :] = np.nan
+    trainPredictPlot[timesteps:len(trainPredict)+timesteps, :] = trainPredict
+    # shift test predictions for plotting
+    testPredictPlot = np.empty_like(dataset)
+    testPredictPlot[:, :] = np.nan
+    testPredictPlot[len(trainPredict)+(timesteps*2)+1:len(dataset)-1, :] = testPredict
+
+    # plot baseline and predictions
+    plt.plot(scaler.inverse_transform(dataset))
+    plt.plot(trainPredictPlot)
+    plt.plot(testPredictPlot)
+    plt.show()
