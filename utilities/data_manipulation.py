@@ -50,7 +50,7 @@ def pivot_dataframe(input_df, identifier_col, value_col):
         independent_series[val] = input_df[input_df[identifier_col] == val][value_col].to_list()
     output_df = pd.DataFrame(independent_series)
     output_df['Date'] = input_df['Date'].drop_duplicates().to_list()
-
+    output_df = output_df.sort_values(by = 'Date', ascending=True).reset_index(drop=True)
     return output_df
 
 
@@ -67,11 +67,12 @@ def plot_results(dataset, target_val, model_type):
                         mode='lines',
                         name='Actual'))
     
-    fig.add_trace(go.Scatter(x=train_df['Date'], y=train_df[target_val],
-                        mode='lines+markers',
+    # Adding test and train predictions
+    fig.add_trace(go.Scatter(x=train_df['Date'], y=train_df['Prediction'],
+                        mode='markers',
                         name='Train Prediction'))
     
-    fig.add_trace(go.Scatter(x=test_df['Date'], y=test_df[target_val],
+    fig.add_trace(go.Scatter(x=test_df['Date'], y=test_df['Prediction'],
                         mode='markers', name='Test Prediction'))
     fig.update_layout(title = "Predicted vs. Actual, {model}".format(model = model_type))
 
