@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 def convert_to_supervised(data, n_in=1, n_out=1, dropnan=True):
  
@@ -78,5 +79,41 @@ def plot_results(dataset, target_val, model_type):
 
     fig.show()
 
-def timeseries_split(input_df, train_ratio):
-    '''performs time based test/train split'''
+def plot_comparison(train_pred, test_pred, train_y, test_y, dates):
+
+    '''dates: list of dates to serve as x axis'''
+    factor_levels = train_pred.shape[1]
+
+    # making subplots
+    fig = make_subplots(rows=factor_levels, cols=1)
+    # iterating through factor levels
+    for level in range(factor_levels):
+
+        # defining dates for x axis
+        train_dates = dates[:train_pred.shape[1]]
+        test_dates = dates[-test_pred.shape[1]:]
+
+        # train set
+        fig.append_trace(go.Scatter(x=train_dates, y=train_y[:, level],
+                            mode='lines',
+                            name='Actual-Train'),
+                            row=level, col=1)
+        # test set
+        fig.append_trace(go.Scatter(x=test_dates, y=test_y[:, level],
+                            mode='lines',
+                            name='Actual-Test'),
+                            row=level, col=1)
+        
+        # train pred
+        fig.append_trace(go.Scatter(x=train_dates, y=train_pred[:, level],
+                            mode='Markers',
+                            name='Pred-Train'),
+                            row=level, col=1)
+        # test pred
+        fig.append_trace(go.Scatter(x=test_dates, y=test_pred[:, level],
+                            mode='Markers',
+                            name='Pred-Test'),
+                            row=level, col=1)
+        
+    fig.update_layout(height=600, width=600, title_text="Test vs. Train, By Series")
+    fig.show()
