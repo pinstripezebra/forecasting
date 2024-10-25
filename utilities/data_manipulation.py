@@ -4,18 +4,18 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-def convert_to_supervised(data, n_in=1, n_out=1, dropnan=True):
+def convert_to_supervised(data, window_size=1, forecast_size=1, dropnan=True):
  
     '''Converts a 1d time series dataset into a 2d supervised learning format'''
 
     df = pd.DataFrame(data)
     cols = list()
-    # Training sequence (t-n, ... t-1)
-    for i in range(n_in, 0, -1):
+    # Training sequence: t-window_size, ..., t-1
+    for i in range(window_size, 0, -1):
         cols.append(df.shift(i))
     
-    # Forecast sequence (t, t+1, ... t+n)
-    for i in range(0, n_out):
+    # Forecast sequence: (t, t+1, ... t+forecast_size)
+    for i in range(0, forecast_size):
         cols.append(df.shift(-i))
 
     # Concatenating columns together
