@@ -5,6 +5,7 @@ from folium.plugins import HeatMap
 import pandas as pd
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import datetime
 
 dash.register_page(__name__, path='/')
 
@@ -63,22 +64,19 @@ def draw_Image(input_figure):
 # callback for weekly forecast
 @callback(
     Output(component_id='weekly-forecast', component_property='children'),
-    [Input('7-day-forecast', 'n_clicks'),
-    Input('1-day-forecast', 'n_clicks')],
+    Input('btn-nclicks-1', 'n_clicks'),
+    Input('btn-nclicks-2', 'n_clicks'),
 )
 def update_timeseries(button1, button2):
 
-    print("here")
     #Making copy of DF and filtering
     filtered_df = df1
-    if "7-day-forecast" == ctx.triggered_id:
+    if "btn-nclicks-1" == ctx.triggered_id:
         filtered_df = df1
-    elif "1-day-forecast" == ctx.triggered_id:
-        filtered_df = filtered_df[filtered_df['time'].dt.date <  filtered_df['time'].dt.date.min() + 1]
+    elif "btn-nclicks-2" == ctx.triggered_id:
+        filtered_df = df1[df1['time'].dt.date <  df1['time'].dt.date.min() + + datetime.timedelta(days=1)]
     else:
         filtered_df = df1
-
-    print(len(filtered_df))
 
     #Creating figure
     time_fig = px.scatter(filtered_df, x = 'time', y = 'temperature_2m',
