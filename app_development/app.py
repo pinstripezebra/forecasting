@@ -13,12 +13,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 #base_path = os.path.dirname(__file__)
-#parent_path = os.path.dirname(os.path.dirname(__file__))
+parent_path = os.path.dirname(os.path.dirname(__file__))
 
 # loading Data
-#file_name = 'DailyDelhiClimate.csv'
-#total_path = parent_path + '\\Data\\' 
-#df1 = pd.read_csv(total_path + file_name)
+file_name = 'DailyDelhiClimate.csv'
+total_path = parent_path + '\\Data\\' 
+df1 = pd.read_csv(total_path + file_name)
 
 
 # Building and Initializing the app
@@ -33,14 +33,6 @@ app.layout = html.Div([
     ]),
     dash.page_container
 ])
-CONTENT_STYLE = {
-    "margin-left": "18rem",
-    "margin-right": "2rem",
-    "padding": "2rem 1rem",
-    "display":"inline-block",
-    "width": "100%"
-}
-
 
 
 # Runing the app
