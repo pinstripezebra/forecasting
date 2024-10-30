@@ -1,4 +1,5 @@
 # For data manipulation, visualization, app
+import dash
 from dash import Dash, dcc, html, callback,Input, Output,dash_table
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -21,9 +22,17 @@ df1 = pd.read_csv(total_path + file_name)
 
 
 # Building and Initializing the app
-dash_app = Dash(external_stylesheets=[dbc.themes.SLATE])
-app = dash_app.server
+app = Dash(__name__, use_pages=True)
 
+app.layout = html.Div([
+    html.H1('Multi-page app with Dash Pages'),
+    html.Div([
+        html.Div(
+            dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
+        ) for page in dash.page_registry.values()
+    ]),
+    dash.page_container
+])
 CONTENT_STYLE = {
     "margin-left": "18rem",
     "margin-right": "2rem",
@@ -32,9 +41,8 @@ CONTENT_STYLE = {
     "width": "100%"
 }
 
-# Creating layout
-dash_app.layout = html.Div(children = [ ], style = CONTENT_STYLE)
+
 
 # Runing the app
 if __name__ == '__main__':
-    dash_app.run_server(debug=False)
+    app.run_server(debug=False)
