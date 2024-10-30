@@ -41,6 +41,7 @@ def return_surrounding_weather(latitude, longitude, margin = 0.001):
         sample = client.get_pandas()
         sample['latitude'] = lat_val
         sample['longitude'] = long_val
+        sample['location'] = location
         #sample = sample.reset_index()
         output_data.append(sample)
 

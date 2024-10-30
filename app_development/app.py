@@ -27,7 +27,7 @@ else: # else load old data
     total_path = parent_path + '\\Data\\' 
     df1 = pd.read_csv(total_path + file_name)
 
-
+print(total_path)
 # building and Initializing the app
 app = Dash(__name__, use_pages=True)
 
