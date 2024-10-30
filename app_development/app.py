@@ -27,8 +27,8 @@ else: # else load old data
     total_path = parent_path + '\\Data\\' 
     df1 = pd.read_csv(total_path + file_name)
 
-print(total_path)
-# building and Initializing the app
+
+# defining and Initializing the app
 app = Dash(__name__, use_pages=True)
 
 app.layout = html.Div([
@@ -42,6 +42,6 @@ app.layout = html.Div([
 ])
 
 
-# Runing the app
+# Running the app
 if __name__ == '__main__':
     app.run_server(debug=False)

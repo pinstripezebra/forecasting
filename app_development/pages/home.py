@@ -9,7 +9,7 @@ import plotly.express as px
 dash.register_page(__name__, path='/')
 
 # Note will need to pass these in from app
-df1 = pd.read_csv('C:\Users\seelc\OneDrive\Desktop\Lucas Desktop Items\Projects\forecasting\Data\weather_data.csv')
+df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/Data/weather_data.csv")
 latitude = 45.5152
 longitude = -122.6784
 df1 = df1[(df1['latitude'] == latitude) & (df1['longitude'] == longitude)]
