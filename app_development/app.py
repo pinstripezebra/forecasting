@@ -7,21 +7,28 @@ import pandas as pd
 import os 
 import numpy as np
 
-# For modeling
-from sklearn.metrics import confusion_matrix
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+# importing helper functions
+from utility.data_query import return_surrounding_weather
 
-#base_path = os.path.dirname(__file__)
+# defining input variables
+repull_data = False
+latitude = 45.5152
+longitude = -122.6784
+
+# base_path = os.path.dirname(__file__)
 parent_path = os.path.dirname(os.path.dirname(__file__))
 
 # loading Data
-file_name = 'DailyDelhiClimate.csv'
-total_path = parent_path + '\\Data\\' 
-df1 = pd.read_csv(total_path + file_name)
+df1 = ""
+if repull_data: # if we want to repull data
+    df1 = return_surrounding_weather(latitude, longitude)
+else: # else load old data
+    file_name = 'weather_data.csv'
+    total_path = parent_path + '\\Data\\' 
+    df1 = pd.read_csv(total_path + file_name)
 
 
-# Building and Initializing the app
+# building and Initializing the app
 app = Dash(__name__, use_pages=True)
 
 app.layout = html.Div([
