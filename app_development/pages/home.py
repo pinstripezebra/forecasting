@@ -27,9 +27,9 @@ layout = html.Div([
                 html.Div(children= [
                 dcc.Markdown('Choose the type of forecast'),
                 html.Div([
-                    html.Button('temperature', id='temperature-click', n_clicks=0),
-                    html.Button('wind', id='wind-click', n_clicks=0),
-                    html.Button('cloud', id='cloud-click', n_clicks=0),
+                    dbc.Button('temp', outline = True, color = 'primary', id='temp-click',className="me-1", n_clicks=0),
+                    dbc.Button('wind', outline = True, color = 'primary', id='wind-click',className="me-1", n_clicks=0),
+                    dbc.Button('cloud', outline = True, color = 'primary', id='cloud-click',className="me-1", n_clicks=0),
                     html.Div(id='container-forecast-type')
                 ])
 
@@ -55,8 +55,10 @@ layout = html.Div([
 
                 html.Label('Date'),
                 html.Div([
-                    html.Button('7-day-forecast', id='btn-nclicks-1', n_clicks=0),
-                    html.Button('1-day-forecast', id='btn-nclicks-2', n_clicks=0),
+                    #html.Button('7-day-forecast', id='btn-nclicks-1', n_clicks=0),
+                    #html.Button('1-day-forecast', id='btn-nclicks-2', n_clicks=0),
+                    dbc.Button('7-day-forecast', outline = True, color = 'primary', id='btn-nclicks-1',className="me-1", n_clicks=0),
+                    dbc.Button('1-day-forecast', outline = True, color = 'primary', id='btn-nclicks-2',className="me-1", n_clicks=0),
                     html.Div(id='container-button-timestamp')
                 ])
 
