@@ -4,3 +4,12 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: rgb(120, 105, 255)
 }
+
+.text {
+  font-family: sans-serif;
+  color: rgb(7, 1, 2);
+}
+
+p {
+  color: brown;
+}

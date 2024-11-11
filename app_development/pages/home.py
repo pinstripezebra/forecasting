@@ -24,7 +24,7 @@ layout = html.Div([
     html.Div([
             dbc.Row([
                 html.Div(children= [
-                dcc.Markdown('Choose the type of forecast'),
+                html.P('Choose the type of forecast', className = 'text'),
                 html.Div([
                     dbc.Button('temp', outline = True, color = 'primary', id='temp-click',className="me-1", n_clicks=0),
                     dbc.Button('wind', outline = True, color = 'primary', id='wind-click',className="me-1", n_clicks=0),
@@ -41,7 +41,7 @@ layout = html.Div([
             dbc.Row([
                 html.Div(children= [
                 html.H1('Weather Forecast'),
-                dcc.Markdown('Choose the best time to be out and about'),
+                html.P('Choose the best time to be out and about', className = 'text'),
 
                 html.Label('Date'),
                 html.Div([
