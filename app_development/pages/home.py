@@ -19,7 +19,6 @@ df1 = df1[(df1['latitude'] == latitude) & (df1['longitude'] == longitude)]
 # Defining layout
 layout = html.Div([
     html.H1('This is our Home page'),
-    html.Div('Next Week Forecast'),
 
     # Selector to choose what type of forecast to show
     html.Div([
@@ -35,15 +34,6 @@ layout = html.Div([
 
                 ])
             ])
-
-    # Generates a graph of the forecast
-    ]),
-    html.Div([
-            dbc.Card(
-                dbc.CardBody([
-                    dbc.Row(id = 'weekly-forecast'), 
-                ])
-            )
     ]),
 
     # Selector for choosing forecast window
@@ -62,7 +52,18 @@ layout = html.Div([
 
                 ])
             ])
+    ]),
+
+
+    # Generates a graph of the forecast
+    html.Div([
+            dbc.Card(
+                dbc.CardBody([
+                    dbc.Row(id = 'weekly-forecast'), 
+                ])
+            )
     ])
+
 
 ])
 
