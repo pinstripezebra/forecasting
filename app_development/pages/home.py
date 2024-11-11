@@ -20,6 +20,24 @@ df1 = df1[(df1['latitude'] == latitude) & (df1['longitude'] == longitude)]
 layout = html.Div([
     html.H1('This is our Home page'),
     html.Div('Next Week Forecast'),
+
+    # Selector to choose what type of forecast to show
+    html.Div([
+            dbc.Row([
+                html.Div(children= [
+                dcc.Markdown('Choose the type of forecast'),
+                html.Div([
+                    html.Button('temperature', id='temperature-click', n_clicks=0),
+                    html.Button('wind', id='wind-click', n_clicks=0),
+                    html.Button('cloud', id='cloud-click', n_clicks=0),
+                    html.Div(id='container-forecast-type')
+                ])
+
+                ])
+            ])
+
+    # Generates a graph of the forecast
+    ]),
     html.Div([
             dbc.Card(
                 dbc.CardBody([
@@ -27,6 +45,8 @@ layout = html.Div([
                 ])
             )
     ]),
+
+    # Selector for choosing forecast window
     html.Div([
             dbc.Row([
                 html.Div(children= [
@@ -53,9 +73,7 @@ def draw_Image(input_figure):
             dbc.Card(
                 dbc.CardBody([
                     dcc.Graph(figure=input_figure.update_layout(
-                            template='plotly_dark',
-                            plot_bgcolor= 'rgba(100, 100, 100, 100)',
-                            paper_bgcolor= 'rgba(0, 0, 0, 0)',
+                            template='ggplot2',
                         )
                     ) 
                 ])
