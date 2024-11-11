@@ -55,8 +55,6 @@ layout = html.Div([
 
                 html.Label('Date'),
                 html.Div([
-                    #html.Button('7-day-forecast', id='btn-nclicks-1', n_clicks=0),
-                    #html.Button('1-day-forecast', id='btn-nclicks-2', n_clicks=0),
                     dbc.Button('7-day-forecast', outline = True, color = 'primary', id='btn-nclicks-1',className="me-1", n_clicks=0),
                     dbc.Button('1-day-forecast', outline = True, color = 'primary', id='btn-nclicks-2',className="me-1", n_clicks=0),
                     html.Div(id='container-button-timestamp')
@@ -87,10 +85,13 @@ def draw_Image(input_figure):
     Output(component_id='weekly-forecast', component_property='children'),
     Input('btn-nclicks-1', 'n_clicks'),
     Input('btn-nclicks-2', 'n_clicks'),
+    Input('temp-click', 'n_clicks'),
+    Input('wind-click', 'n_clicks'),
+    Input('cloud-click', 'n_clicks'),
 )
-def update_timeseries(button1, button2):
+def update_timeseries(button1, button2, button3, button4, button5):
 
-    #Making copy of DF and filtering
+    # Filtering for how far back
     filtered_df = df1
     if "btn-nclicks-1" == ctx.triggered_id:
         filtered_df = df1
@@ -99,9 +100,17 @@ def update_timeseries(button1, button2):
     else:
         filtered_df = df1
 
+    # Selecting forecast type
+    forecast_type = "temperature_2m"
+    if 'wind-click'== ctx.triggered_id:
+        forecast_type = 'windspeed_10m'
+    elif 'cloud-click' == ctx.triggered_id:
+        forecast_type = 'cloudcover'
+
+
     #Creating figure
-    time_fig = px.scatter(filtered_df, x = 'time', y = 'temperature_2m',
-                              title = 'Temperature Forecast')
+    time_fig = px.scatter(filtered_df, x = 'time', y = forecast_type,
+                              title = '{type} Forecast'.format(type = forecast_type))
 
     return dbc.Row([
                 dbc.Col([
