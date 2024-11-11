@@ -47,13 +47,14 @@ layout = html.Div([
 ])
 
 def draw_Image(input_figure):
+    '''draw images returns a graph inside a card and div component'''
 
     return html.Div([
             dbc.Card(
                 dbc.CardBody([
                     dcc.Graph(figure=input_figure.update_layout(
                             template='plotly_dark',
-                            plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                            plot_bgcolor= 'rgba(100, 100, 100, 100)',
                             paper_bgcolor= 'rgba(0, 0, 0, 0)',
                         )
                     ) 

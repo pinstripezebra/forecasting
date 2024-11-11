@@ -29,7 +29,7 @@ else: # else load old data
 
 
 # defining and Initializing the app
-app = Dash(__name__, use_pages=True)
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = html.Div([
     html.H1('Multi-page app with Dash Pages'),
