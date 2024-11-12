@@ -53,7 +53,7 @@ app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP]
 
 # Defining components
 sidebar = html.Div(children = [
-            html.H3("Pages", className="display-4"),
+            html.H3("Pages"),
             html.Hr(),
             html.Div([ 
                 dbc.Nav([
@@ -61,7 +61,7 @@ sidebar = html.Div(children = [
                 ], vertical=True)
 
             ]),
-            html.H3("Description", className="display-4"),
+            html.H3("Description"),
             html.P(
                 "Your custom running companion allowing you to plan out your perfect time to run ensuring you never miss a workout.", className="text"
             ),

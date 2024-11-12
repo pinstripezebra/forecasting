@@ -6,12 +6,15 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import datetime
-
+import numpy as np
 dash.register_page(__name__, path='/')
 
 # Note will need to pass these in from app
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/Data/weather_data.csv")
-df1['time'] = df1['time'].astype('datetime64[ns]')
+
+# Temp line until data pull is live
+df1['time'] = df1['time'].astype('datetime64[ns]') + np.timedelta64(12, 'D')
+
 latitude = 45.5152
 longitude = -122.6784
 df1 = df1[(df1['latitude'] == latitude) & (df1['longitude'] == longitude)]
