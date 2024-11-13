@@ -33,30 +33,30 @@ layout = html.Div([
         ]),
     html.Br(),
 
-   ''' html.Div([
-            dbc.Button('Forecast', outline = True, color = 'primary', id='clock-click',className="me-1", n_clicks=0),
+   # Generates a graph of the forecast
+    html.Div([
             dbc.Card(
                 dbc.CardBody([
-                    dbc.Row(id = 'clock-Row'),   
-                ]), color = 'dark'
+                    dbc.Row(id = 'clock-Row'), 
+                ])
             )
-        ]),'''
+    ])
 ])
 
 
 # callback for clock row
 @callback(
     Output(component_id='clock-Row', component_property='children'),
-    Input('clock-click', 'n_clicks'),
+    Input('forecast-click', 'n_clicks'),
 )
 def update_kpi(button1):
 
     return dbc.Row([
-                        dbc.Col([
-                               generate_run_plot()
-                        ], width=4),
+                dbc.Col([
+                    draw_Image(generate_run_plot())
+                ], width={"size": 6, "offset": 0}),
 
-                    ])
+            ])
 
 
 # callback for kpi row
