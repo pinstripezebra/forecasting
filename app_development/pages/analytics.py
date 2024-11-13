@@ -4,22 +4,10 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import dash_bootstrap_components as dbc
+from utility.visualization import generate_run_plot
+from utility.visualization import generate_run_plot, draw_Image, draw_Text
 
 
-
-
-
-def draw_Text(input_text):
-
-    return html.Div([
-            dbc.Card(
-                dbc.CardBody([
-                        html.Div([
-                            html.H2(input_text),
-                        ], style={'textAlign': 'center'}) 
-                ])
-            ),
-        ])
 
 # Note will need to pass these in from app
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/Data/weather_data.csv")
@@ -44,8 +32,31 @@ layout = html.Div([
             )
         ]),
     html.Br(),
-    html.Div(id='analytics-output')
+
+   ''' html.Div([
+            dbc.Button('Forecast', outline = True, color = 'primary', id='clock-click',className="me-1", n_clicks=0),
+            dbc.Card(
+                dbc.CardBody([
+                    dbc.Row(id = 'clock-Row'),   
+                ]), color = 'dark'
+            )
+        ]),'''
 ])
+
+
+# callback for clock row
+@callback(
+    Output(component_id='clock-Row', component_property='children'),
+    Input('clock-click', 'n_clicks'),
+)
+def update_kpi(button1):
+
+    return dbc.Row([
+                        dbc.Col([
+                               generate_run_plot()
+                        ], width=4),
+
+                    ])
 
 
 # callback for kpi row

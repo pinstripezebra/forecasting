@@ -3,6 +3,8 @@
 import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
+from dash import Dash, dcc, html, callback,Input, Output,dash_table
+import dash_bootstrap_components as dbc
 
 
 df = pd.read_csv('./Data/test.csv')
@@ -53,3 +55,29 @@ def generate_run_plot():
         )
     )
     return fig
+
+def draw_Image(input_figure):
+    '''draw images returns a graph inside a card and div component'''
+
+    return html.Div([
+            dbc.Card(
+                dbc.CardBody([
+                    dcc.Graph(figure=input_figure.update_layout(
+                            template='ggplot2',
+                        )
+                    ) 
+                ])
+            ),  
+        ])
+
+def draw_Text(input_text):
+
+    return html.Div([
+            dbc.Card(
+                dbc.CardBody([
+                        html.Div([
+                            html.H2(input_text),
+                        ], style={'textAlign': 'center'}) 
+                ])
+            ),
+        ])

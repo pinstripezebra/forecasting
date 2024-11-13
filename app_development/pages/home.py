@@ -7,6 +7,9 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import datetime
 import numpy as np
+from utility.visualization import generate_run_plot, draw_Image, draw_Text
+
+
 dash.register_page(__name__, path='/')
 
 # Note will need to pass these in from app
@@ -69,20 +72,6 @@ layout = html.Div([
 
 
 ])
-
-def draw_Image(input_figure):
-    '''draw images returns a graph inside a card and div component'''
-
-    return html.Div([
-            dbc.Card(
-                dbc.CardBody([
-                    dcc.Graph(figure=input_figure.update_layout(
-                            template='ggplot2',
-                        )
-                    ) 
-                ])
-            ),  
-        ])
 
 # callback for weekly forecast
 @callback(
