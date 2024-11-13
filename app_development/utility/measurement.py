@@ -63,6 +63,5 @@ def find_optimal_window(optimal_conditions, forecasted_conditions, max_window):
 
 
 # Testing function
-score = find_optimal_window(test_optimal, test_forecast, 1000)
-
-print(score)
+#score = find_optimal_window(test_optimal, test_forecast, 1000)
+#print(score)
