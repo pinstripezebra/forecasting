@@ -57,11 +57,11 @@ def find_optimal_window(optimal_conditions, forecasted_conditions, max_window):
         ranking.append(current_score)
 
     score_df = pd.DataFrame({'Indice': ranking_indice,
-                             'Score': ranking}).sort_values(by = 'Score').reset_index(drop=True)
+                             'Score': ranking})
     return score_df
 
 
 
 # Testing function
-#score = find_optimal_window(test_optimal, test_forecast, 1000)
-#print(score)
+score = find_optimal_window(test_optimal, test_forecast, 1000)
+print(score)

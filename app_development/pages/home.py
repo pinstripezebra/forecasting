@@ -8,15 +8,32 @@ import plotly.express as px
 import datetime
 import numpy as np
 from utility.visualization import generate_run_plot, draw_Image, draw_Text
-
+from utility.measurement import find_optimal_window
 
 dash.register_page(__name__, path='/')
+
+
 
 # Note will need to pass these in from app
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/Data/weather_data.csv")
 
 # Temp line until data pull is live
 df1['time'] = df1['time'].astype('datetime64[ns]') + np.timedelta64(12, 'D')
+
+# Defining optimal conditions
+optimal_conditions = {'temperature_2m': 20,
+        'cloudcover': 5,
+        'windspeed_10m': 0}
+
+forecasted_conditions = {'temperature_2m': df1['temperature_2m'].to_list(),
+                         'cloudcover': df1['cloudcover'].to_list(),
+                         'windspeed_10m': df1['windspeed_10m'].to_list()}
+
+# Rating weather conditions
+conditions = find_optimal_window(optimal_conditions, optimal_conditions)
+
+# Adding forecast to dataframe
+df1['Forecast_Score'] = conditions['Score']
 
 latitude = 45.5152
 longitude = -122.6784
