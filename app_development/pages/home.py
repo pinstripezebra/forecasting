@@ -9,6 +9,7 @@ import datetime
 import numpy as np
 from utility.visualization import generate_run_plot, draw_Image, draw_Text
 from utility.measurement import find_optimal_window
+import dash_daq as daq
 
 dash.register_page(__name__, path='/')
 
@@ -44,61 +45,46 @@ df1 = df1[(df1['latitude'] == latitude) & (df1['longitude'] == longitude)]
 layout = html.Div([
     html.H1('This is our Home page'),
 
-    # Selector to choose what type of forecast to show
-    html.Div([
-            dbc.Row([
-                html.Div(children= [
-                html.P('Choose the type of forecast', className = 'text'),
-                html.Div([
-                    dbc.Button('temp', outline = True, color = 'primary', id='temp-click',className="me-1", n_clicks=0),
-                    dbc.Button('wind', outline = True, color = 'primary', id='wind-click',className="me-1", n_clicks=0),
-                    dbc.Button('cloud', outline = True, color = 'primary', id='cloud-click',className="me-1", n_clicks=0),
-                    html.Div(id='container-forecast-type')
-                ])
+    # Adding selector for overall forecast
+    daq.BooleanSwitch(id='overall-forecast-switch', on=False),
 
+    # Adding filter for forecast period
+    html.Div([
+                dbc.Row([
+                    html.Div(children= [
+                    html.H1('Weather Forecast'),
+                    html.P('Choose the best time to be out and about', className = 'text'),
+
+                    html.Label('Date'),
+                    html.Div([
+                        dbc.Button('7-day-forecast', outline = True, color = 'primary', id='btn-nclicks-1',className="me-1", n_clicks=0),
+                        dbc.Button('1-day-forecast', outline = True, color = 'primary', id='btn-nclicks-2',className="me-1", n_clicks=0),
+                    ])
+
+                    ])
                 ])
-            ])
-    ]),
+        ]),
 
     # Selector for choosing forecast window
     html.Div([
-            dbc.Row([
-                html.Div(children= [
-                html.H1('Weather Forecast'),
-                html.P('Choose the best time to be out and about', className = 'text'),
 
-                html.Label('Date'),
-                html.Div([
-                    dbc.Button('7-day-forecast', outline = True, color = 'primary', id='btn-nclicks-1',className="me-1", n_clicks=0),
-                    dbc.Button('1-day-forecast', outline = True, color = 'primary', id='btn-nclicks-2',className="me-1", n_clicks=0),
-                    html.Div(id='container-button-timestamp')
-                ])
-
-                ])
-            ])
-    ]),
-
-
-    # Generates a graph of the forecast
-    html.Div([
-            dbc.Card(
-                dbc.CardBody([
-                    dbc.Row(id = 'weekly-forecast'), 
-                ])
-            )
-    ])
+    ], id='test-forecast-out')
 
 
 ])
 
-# callback for weekly forecast
+
+
+
+# callback for weekly forecast for individual series(temp, wind, etc)
 @callback(
     Output(component_id='weekly-forecast', component_property='children'),
     Input('btn-nclicks-1', 'n_clicks'),
     Input('btn-nclicks-2', 'n_clicks'),
     Input('temp-click', 'n_clicks'),
     Input('wind-click', 'n_clicks'),
-    Input('cloud-click', 'n_clicks'),
+    Input('cloud-click', 'n_clicks')
+
 )
 def update_timeseries(button1, button2, button3, button4, button5):
 
@@ -129,3 +115,45 @@ def update_timeseries(button1, button2, button3, button4, button5):
                 ], width={"size": 6, "offset": 0}),
 
             ])
+
+# callback for weekly forecast for overall series
+@callback(
+    Output(component_id='test-forecast-out', component_property='children'),
+    Input('overall-forecast-switch', 'on')
+
+)
+
+def return_type(input):
+
+    output = html.Div([
+        # Selector to choose what type of forecast to show
+        html.Div([
+                dbc.Row([
+                    html.Div(children= [
+                    html.P('Choose the type of forecast', className = 'text'),
+                    html.Div([
+                        dbc.Button('temp', outline = True, color = 'primary', id='temp-click',className="me-1", n_clicks=0),
+                        dbc.Button('wind', outline = True, color = 'primary', id='wind-click',className="me-1", n_clicks=0),
+                        dbc.Button('cloud', outline = True, color = 'primary', id='cloud-click',className="me-1", n_clicks=0),
+                        html.Div(id='container-forecast-type')
+                    ])
+
+                    ])
+                ])
+        ]),
+
+
+        # Generates a graph of the forecast
+        html.Div([
+                dbc.Card(
+                    dbc.CardBody([
+                        dbc.Row(id = 'weekly-forecast'), 
+                    ])
+                )
+        ])
+    ])
+
+    if input:
+        return output
+    else:
+        return html.Div([])
