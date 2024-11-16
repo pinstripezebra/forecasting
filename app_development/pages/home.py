@@ -30,7 +30,8 @@ forecasted_conditions = {'temperature_2m': df1['temperature_2m'].to_list(),
                          'windspeed_10m': df1['windspeed_10m'].to_list()}
 
 # Rating weather conditions
-conditions = find_optimal_window(optimal_conditions, optimal_conditions)
+max_window = len(df1['temperature_2m'].to_list())
+conditions = find_optimal_window(optimal_conditions, forecasted_conditions, max_window)
 
 # Adding forecast to dataframe
 df1['Forecast_Score'] = conditions['Score']

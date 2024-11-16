@@ -19,7 +19,7 @@ def measure_running_conditions(optimal_values, forecasted_values):
     '''helper function to measure difference between two lists, one containing
     forecasted conditions and one containing actual conditions'''
 
-    score = sum([abs(i - j)^2 for i, j in zip(optimal_values, forecasted_values)])
+    score = sum([abs(float(i) - float(j))**2 for i, j in zip(optimal_values, forecasted_values)])
     return score
 
 
