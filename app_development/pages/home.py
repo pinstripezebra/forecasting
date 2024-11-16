@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 import dash
 from dash import html, Dash, dcc, callback,Input, Output,dash_table, ctx
 import folium
@@ -46,8 +49,17 @@ layout = html.Div([
     html.H1('This is our Home page'),
 
     # Adding selector for overall forecast
-    daq.BooleanSwitch(id='overall-forecast-switch', on=False),
-
+    html.Div([
+        dbc.RadioItems(
+            options=[
+                {"label": "Option 1", "value": 1},
+                {"label": "Option 2", "value": 2},
+            ],
+            value=1,
+            id="overall-forecast-switch",
+            inline=True,
+        )
+    ]),
     # Adding filter for forecast period
     html.Div([
                 dbc.Row([
@@ -56,39 +68,79 @@ layout = html.Div([
                     html.P('Choose the best time to be out and about', className = 'text'),
 
                     html.Label('Date'),
-                    html.Div([
-                        dbc.Button('7-day-forecast', outline = True, color = 'primary', id='btn-nclicks-1',className="me-1", n_clicks=0),
-                        dbc.Button('1-day-forecast', outline = True, color = 'primary', id='btn-nclicks-2',className="me-1", n_clicks=0),
-                    ])
-
                     ])
                 ])
         ]),
 
-    # Selector for choosing forecast window
-    html.Div([
+    # Div for variable selector
+    html.Div([], id='variable-selector'),
 
-    ], id='test-forecast-out')
+    # Div for forecast
+    html.Div([], id='test-forecast-out')
 
 
 ])
 
 
+@callback (
+        Output(component_id='variable-selector', component_property='children'),
+        Input('overall-forecast-switch', 'value')
+)
+
+def variable_selection(on):
+    print('variable_selector triggered')
+
+    # If overall forecast is selected return empty div
+    if on == 2:
+        return html.Div([
+                dbc.Row([
+                    html.Div([
+                        dbc.Button('7-day-forecast', outline = True, color = 'primary', id='btn-nclicks-1',className="me-1", n_clicks=0),
+                        dbc.Button('1-day-forecast', outline = True, color = 'primary', id='btn-nclicks-2',className="me-1", n_clicks=0),
+                    ])
+
+
+                ])
+        ])
+    
+    # Otherwise user needs to select variable
+    else:
+        return html.Div([
+                dbc.Row([
+                    html.Div([
+                        dbc.Button('7-day-forecast', outline = True, color = 'primary', id='btn-nclicks-1',className="me-1", n_clicks=0),
+                        dbc.Button('1-day-forecast', outline = True, color = 'primary', id='btn-nclicks-2',className="me-1", n_clicks=0),
+                        ]),
+                    html.Div(children= [
+                    html.P('Choose the type of forecast', className = 'text'),
+                    html.Div([
+                        dbc.Button('temp', outline = True, color = 'primary', id='temp-click',className="me-1", n_clicks=0),
+                        dbc.Button('wind', outline = True, color = 'primary', id='wind-click',className="me-1", n_clicks=0),
+                        dbc.Button('cloud', outline = True, color = 'primary', id='cloud-click',className="me-1", n_clicks=0)
+                    ])
+
+                    ])
+                ])
+        ])
 
 
 # callback for weekly forecast for individual series(temp, wind, etc)
 @callback(
-    Output(component_id='weekly-forecast', component_property='children'),
+    Output(component_id='test-forecast-out', component_property='children'),
+
     Input('btn-nclicks-1', 'n_clicks'),
     Input('btn-nclicks-2', 'n_clicks'),
     Input('temp-click', 'n_clicks'),
     Input('wind-click', 'n_clicks'),
-    Input('cloud-click', 'n_clicks')
+    Input('cloud-click', 'n_clicks'),
+    Input('overall-forecast-switch', 'value')
 
 )
-def update_timeseries(button1, button2, button3, button4, button5):
-
+def update_timeseries(button1, button2, button3, button4, button5, on):
+#def update_timeseries(combined, on):
+    print(on)
     # Filtering for how far back
+    print('triggered id :' + ctx.triggered_id)
     filtered_df = df1
     if "btn-nclicks-1" == ctx.triggered_id:
         filtered_df = df1
@@ -97,17 +149,27 @@ def update_timeseries(button1, button2, button3, button4, button5):
     else:
         filtered_df = df1
 
-    # Selecting forecast type
-    forecast_type = "temperature_2m"
-    if 'wind-click'== ctx.triggered_id:
-        forecast_type = 'windspeed_10m'
-    elif 'cloud-click' == ctx.triggered_id:
-        forecast_type = 'cloudcover'
+    time_fig = ""
+    print('Update: ', on)
+    forecast_type = ""
+
+    # If we're forecasting the overall series
+    if on == 2:
+        print('overall forecast')
+        forecast_type = 'Forecast_Score'
+        time_fig = px.bar(filtered_df, x = 'time', y = forecast_type,
+                            title = '{type} Forecast'.format(type = forecast_type))
 
 
-    #Creating figure
-    time_fig = px.scatter(filtered_df, x = 'time', y = forecast_type,
-                              title = '{type} Forecast'.format(type = forecast_type))
+    # If we're forecasting an individual variable
+    else:
+        forecast_type = "temperature_2m"
+        if 'wind-click'== ctx.triggered_id:
+            forecast_type = 'windspeed_10m'
+        elif 'cloud-click' == ctx.triggered_id:
+            forecast_type = 'cloudcover'
+        time_fig = px.scatter(filtered_df, x = 'time', y = forecast_type,
+                            title = '{type} Forecast'.format(type = forecast_type))
 
     return dbc.Row([
                 dbc.Col([
@@ -116,44 +178,4 @@ def update_timeseries(button1, button2, button3, button4, button5):
 
             ])
 
-# callback for weekly forecast for overall series
-@callback(
-    Output(component_id='test-forecast-out', component_property='children'),
-    Input('overall-forecast-switch', 'on')
 
-)
-
-def return_type(input):
-
-    output = html.Div([
-        # Selector to choose what type of forecast to show
-        html.Div([
-                dbc.Row([
-                    html.Div(children= [
-                    html.P('Choose the type of forecast', className = 'text'),
-                    html.Div([
-                        dbc.Button('temp', outline = True, color = 'primary', id='temp-click',className="me-1", n_clicks=0),
-                        dbc.Button('wind', outline = True, color = 'primary', id='wind-click',className="me-1", n_clicks=0),
-                        dbc.Button('cloud', outline = True, color = 'primary', id='cloud-click',className="me-1", n_clicks=0),
-                        html.Div(id='container-forecast-type')
-                    ])
-
-                    ])
-                ])
-        ]),
-
-
-        # Generates a graph of the forecast
-        html.Div([
-                dbc.Card(
-                    dbc.CardBody([
-                        dbc.Row(id = 'weekly-forecast'), 
-                    ])
-                )
-        ])
-    ])
-
-    if input:
-        return output
-    else:
-        return html.Div([])
