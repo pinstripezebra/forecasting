@@ -137,10 +137,7 @@ def variable_selection(on):
 
 )
 def update_timeseries(button1, button2, button3, button4, button5, on):
-#def update_timeseries(combined, on):
-    print(on)
-    # Filtering for how far back
-    print('triggered id :' + ctx.triggered_id)
+
     filtered_df = df1
     if "btn-nclicks-1" == ctx.triggered_id:
         filtered_df = df1
@@ -151,7 +148,6 @@ def update_timeseries(button1, button2, button3, button4, button5, on):
 
     time_fig = ""
     print('Update: ', on)
-    forecast_type = ""
 
     # If we're forecasting the overall series
     if on == 2:
