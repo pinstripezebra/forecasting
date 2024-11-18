@@ -38,6 +38,11 @@ app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP]
 
 # Defining components
 sidebar = html.Div(children = [
+            html.Img(
+                        alt="Link to Github",
+                        src="./assets/app_logo.png",
+                        style={'height':'10%', 'width':'40%', 'margin': 'auto'}
+                    ),
             html.H3("Pages"),
             html.Hr(),
             html.Div([ 
