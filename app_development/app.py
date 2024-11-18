@@ -6,15 +6,22 @@ import plotly.express as px
 import pandas as pd
 import os 
 import numpy as np
-
+from dotenv import find_dotenv, load_dotenv
+import json
 
 # importing helper functions
 from utility.data_query import return_surrounding_weather
 
+# loading environmental variables
+dotenv_path = find_dotenv()
+load_dotenv(dotenv_path)
+LATITUDE = os.getenv("LATITUDE")
+LONGITUDE = os.getenv("ONGITUDE")
+
 # defining input variables
 repull_data = False
-latitude = 45.5152
-longitude = -122.6784
+#latitude = 45.5152
+#longitude = -122.6784
 
 # base_path = os.path.dirname(__file__)
 parent_path = os.path.dirname(os.path.dirname(__file__))
@@ -22,31 +29,19 @@ parent_path = os.path.dirname(os.path.dirname(__file__))
 # loading Data
 df1 = ""
 if repull_data: # if we want to repull data
-    df1 = return_surrounding_weather(latitude, longitude)
+    df1 = return_surrounding_weather(LATITUDE, LONGITUDE)
 else: # else load old data
     file_name = 'weather_data.csv'
     total_path = parent_path + '\\Data\\' 
     df1 = pd.read_csv(total_path + file_name)
 
-# Defining component styles
-SIDEBAR_STYLE = {
-    "position": "fixed",
-    "top": 0,
-    "left": 0,
-    "bottom": 0,
-    "width": "18rem",
-    "padding": "2rem 1rem",
-    "background-color": "#f8f9fa",
-    "display":"inline-block"
-}
+# Loading json files containing component styles
+SIDEBAR_STYLE , CONTENT_STYLE = {}, {}
+with open(parent_path + '/app_development/style/sidebar_style.json') as f:
+    SIDEBAR_STYLE = json.load(f)
+with open(parent_path + '/app_development/style/content_style.json') as f:
+    CONTENT_STYLE = json.load(f)
 
-CONTENT_STYLE = {
-    "margin-left": "18rem",
-    "margin-right": "2rem",
-    "padding": "2rem 1rem",
-    "display":"inline-block",
-    "width": "100%"
-}
 
 # defining and Initializing the app
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
