@@ -8,32 +8,21 @@ import os
 import numpy as np
 from dotenv import find_dotenv, load_dotenv
 import json
+from utility.data_query import data_pipeline
 
-# importing helper functions
-from utility.data_query import return_surrounding_weather
 
 # loading environmental variables
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
-LATITUDE = os.getenv("LATITUDE")
-LONGITUDE = os.getenv("ONGITUDE")
+LATITUDE = float(os.getenv("LATITUDE"))
+LONGITUDE = float(os.getenv("LONGITUDE"))
+repull_data = True
 
-# defining input variables
-repull_data = False
-#latitude = 45.5152
-#longitude = -122.6784
-
-# base_path = os.path.dirname(__file__)
+# defining path
 parent_path = os.path.dirname(os.path.dirname(__file__))
 
 # loading Data
-df1 = ""
-if repull_data: # if we want to repull data
-    df1 = return_surrounding_weather(LATITUDE, LONGITUDE)
-else: # else load old data
-    file_name = 'weather_data.csv'
-    total_path = parent_path + '\\Data\\' 
-    df1 = pd.read_csv(total_path + file_name)
+df1 = data_pipeline(repull_data, LATITUDE, LONGITUDE)
 
 # Loading json files containing component styles
 SIDEBAR_STYLE , CONTENT_STYLE = {}, {}

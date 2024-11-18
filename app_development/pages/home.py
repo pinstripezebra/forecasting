@@ -19,10 +19,7 @@ dash.register_page(__name__, path='/')
 
 
 # Note will need to pass these in from app
-df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/Data/weather_data.csv")
-
-# Temp line until data pull is live
-df1['time'] = df1['time'].astype('datetime64[ns]') + np.timedelta64(12, 'D')
+df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")
 
 # Defining optimal conditions
 optimal_conditions = {'temperature_2m': 20,
