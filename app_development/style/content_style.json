@@ -4,7 +4,7 @@
     "padding": "2rem 1rem",
     "display":"inline-block",
     "width": "100%",
-    "background-image": "url(/assets/test.png)",              
+    "background-image": "url(/assets/background1.png)",              
     "background-size": "cover", 
     "background-repeat": "no-repeat",
     "height": "100vh"
