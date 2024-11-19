@@ -92,8 +92,8 @@ def return_nightimes(df):
     delta = (today_sr - test.replace(tzinfo=timezone.utc)).days
 
     # unique_dates
-    df['time'] = df['time'].dt.date
-    unique_dates = df['time'].unique()
+    df['time_mod'] = df['time'].dt.date
+    unique_dates = df['time_mod'].unique()
 
     # calculating start and end series
     start_series = [today_sr + timedelta(days = delta + i) for i in range(len(unique_dates))]

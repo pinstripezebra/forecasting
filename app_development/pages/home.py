@@ -10,12 +10,13 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import datetime
 import numpy as np
-from utility.visualization import generate_run_plot, draw_Image, draw_Text
-from utility.measurement import find_optimal_window
+from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_timeseries_plot
+from utility.measurement import find_optimal_window, return_nightimes
 import dash_daq as daq
 from suntime import Sun, SunTimeException
 from dotenv import find_dotenv, load_dotenv
 import os
+
 
 dash.register_page(__name__, path='/')
 
@@ -31,9 +32,7 @@ df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/
 df1['time'] = pd.to_datetime(df1['time'])
 
 # sunrise/sunset times
-sun = Sun(LATITUDE, LONGITUDE)
-today_sr = sun.get_sunrise_time()
-today_ss = sun.get_sunset_time()
+s1, s2 = return_nightimes(df1)
 
 # Defining optimal conditions
 optimal_conditions = {'temperature_2m': 20,
@@ -128,8 +127,9 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
         forecast_type = 'cloudcover'
     elif 'overall-click' == ctx.triggered_id:
         forecast_type = 'Forecast_Score'
-    time_fig = px.scatter(filtered_df, x = 'time', y = forecast_type,
-                            title = '{type} Forecast'.format(type = forecast_type))
+    time_fig = generate_timeseries_plot(filtered_df, 'time', forecast_type, s1, s2)
+    #time_fig = px.scatter(filtered_df, x = 'time', y = forecast_type,
+    #                        title = '{type} Forecast'.format(type = forecast_type))
 
     return dbc.Row([
                 dbc.Col([

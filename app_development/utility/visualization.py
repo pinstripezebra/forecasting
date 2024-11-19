@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from dash import Dash, dcc, html, callback,Input, Output,dash_table
 import dash_bootstrap_components as dbc
+import plotly.express as px
 
 
 df = pd.read_csv('./Data/test.csv')
@@ -81,3 +82,24 @@ def draw_Text(input_text):
                 ])
             ),
         ])
+
+def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
+
+
+    time_fig = px.scatter(df, x = 'time', y = y,
+                            title = '{type} Forecast'.format(type = y))
+    for i in len(range(s1)):
+
+        # retrieve the dates
+        start = s1[i]
+        end = s2[i]
+
+        # add shaded region
+        time_fig.add_vrect(
+            x0=start,
+            x1=end,
+            fillcolor="grey",
+            opacity=0.1,
+            line_width=1,
+        )
+    return time_fig
