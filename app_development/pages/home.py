@@ -13,14 +13,28 @@ import numpy as np
 from utility.visualization import generate_run_plot, draw_Image, draw_Text
 from utility.measurement import find_optimal_window
 import dash_daq as daq
+from suntime import Sun, SunTimeException
+from dotenv import find_dotenv, load_dotenv
+import os
 
 dash.register_page(__name__, path='/')
 
+# loading environmental variables
+dotenv_path = find_dotenv()
+load_dotenv(dotenv_path)
+LATITUDE = float(os.getenv("LATITUDE"))
+LONGITUDE = float(os.getenv("LONGITUDE"))
 
 
 # Note will need to pass these in from app
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")
 df1['time'] = pd.to_datetime(df1['time'])
+
+# sunrise/sunset times
+sun = Sun(LATITUDE, LONGITUDE)
+today_sr = sun.get_sunrise_time()
+today_ss = sun.get_sunset_time()
+
 # Defining optimal conditions
 optimal_conditions = {'temperature_2m': 20,
         'cloudcover': 5,

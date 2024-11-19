@@ -1,5 +1,10 @@
 import pandas as pd
 from random import randint
+from suntime import Sun, SunTimeException
+from datetime import datetime, timedelta, timezone
+from dotenv import find_dotenv, load_dotenv
+import os
+
 
 
 def makelist(count):
@@ -63,5 +68,44 @@ def find_optimal_window(optimal_conditions, forecasted_conditions, max_window):
 
 
 # Testing function
-score = find_optimal_window(test_optimal, test_forecast, 1000)
-print(score)
+#score = find_optimal_window(test_optimal, test_forecast, 1000)
+#print(score)
+
+def return_nightimes(df):
+
+    """takes input series of dates and returns a series two lists
+    one of daytime start and one of nightime start to span series"""
+
+    # loading environmental variables
+    dotenv_path = find_dotenv()
+    load_dotenv(dotenv_path)
+    LATITUDE = float(os.getenv("LATITUDE"))
+    LONGITUDE = float(os.getenv("LONGITUDE"))
+
+    # sunrise/sunset times
+    sun = Sun(LATITUDE, LONGITUDE)
+    today_sr = sun.get_sunrise_time()
+    today_ss = sun.get_sunset_time()
+    test = df['time'].to_list()[0].to_pydatetime()
+
+    # Determining difference between start of unique_dates and today
+    delta = (today_sr - test.replace(tzinfo=timezone.utc)).days
+
+    # unique_dates
+    df['time'] = df['time'].dt.date
+    unique_dates = df['time'].unique()
+
+    # calculating start and end series
+    start_series = [today_sr + timedelta(days = delta + i) for i in range(len(unique_dates))]
+    end_series = [today_sr + timedelta(days = delta + i) for i in range(len(unique_dates))]
+
+    return start_series, end_series
+
+
+
+# testing
+#df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")
+#df1['time'] = pd.to_datetime(df1['time'])
+
+#s1, s2 = return_nightimes(df1)
+#print(s1)
