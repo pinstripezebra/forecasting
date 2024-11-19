@@ -32,8 +32,10 @@ df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/
 df1['time'] = pd.to_datetime(df1['time'])
 
 # sunrise/sunset times
-s1, s2 = return_nightimes(df1)
-
+timezone_offset = 8
+s1, s2 = return_nightimes(df1, timezone_offset)
+print(s1)
+print(s2)
 # Defining optimal conditions
 optimal_conditions = {'temperature_2m': 20,
         'cloudcover': 5,

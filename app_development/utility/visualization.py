@@ -88,18 +88,21 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
 
     time_fig = px.scatter(df, x = 'time', y = y,
                             title = '{type} Forecast'.format(type = y))
-    for i in len(range(s1)):
+    i = 0
+    while i < len(s1)-1:
 
-        # retrieve the dates
-        start = s1[i]
-        end = s2[i]
-
+        # start is todays sunset
+        start = s2[i]
+        # end is tomorrows sunrise
+        end = s1[i+1]
+        print(start, end)
         # add shaded region
         time_fig.add_vrect(
             x0=start,
             x1=end,
-            fillcolor="grey",
-            opacity=0.1,
+            fillcolor="black",
+            opacity=0.5,
             line_width=1,
         )
+        i += 1
     return time_fig
