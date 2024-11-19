@@ -33,7 +33,7 @@ with open(parent_path + '/app_development/style/content_style.json') as f:
 
 
 # defining and Initializing the app
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/')
 
 
 # Defining components
