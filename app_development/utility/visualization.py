@@ -63,9 +63,7 @@ def draw_Image(input_figure):
     return html.Div([
             dbc.Card(
                 dbc.CardBody([
-                    dcc.Graph(figure=input_figure.update_layout(
-                            template='ggplot2',
-                        )
+                    dcc.Graph(figure=input_figure.update_layout(template='ggplot2')
                     ) 
                 ])
             ),  
@@ -89,20 +87,49 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
     time_fig = px.scatter(df, x = 'time', y = y,
                             title = '{type} Forecast'.format(type = y))
     i = 0
+    # Finding min/max times from forecast series to align with day/night series
+    min_time = df['time'].min().tz_localize('America/Los_Angeles')
+    max_time = df['time'].max().tz_localize('America/Los_Angeles')
     while i < len(s1)-1:
 
         # start is todays sunset
         start = s2[i]
         # end is tomorrows sunrise
-        end = s1[i+1]
+        end = s1[i]
         print(start, end)
-        # add shaded region
-        time_fig.add_vrect(
-            x0=start,
-            x1=end,
-            fillcolor="black",
-            opacity=0.5,
-            line_width=1,
-        )
+
+        # If both night start/end are within our forecast series
+        if (start > min_time) and (end < max_time):
+            # add shaded region
+            time_fig.add_vrect(
+                x0=start,
+                x1=end,
+                fillcolor="black",
+                opacity=0.5,
+                line_width=1
+            )
+        # If its a left edgecase
+        elif (start < min_time) and (end < max_time):
+            print("HERE")
+            start = min_time
+            time_fig.add_vrect(
+                x0=start,
+                x1=end,
+                fillcolor="black",
+                opacity=0.5,
+                line_width=1
+            )
+        
+        # If its a right edgecase
+        elif (start > min_time) and (end > max_time):
+            end = max_time
+            time_fig.add_vrect(
+                x0=start,
+                x1=end,
+                fillcolor="black",
+                opacity=0.5,
+                line_width=1,
+            )
+        
         i += 1
     return time_fig

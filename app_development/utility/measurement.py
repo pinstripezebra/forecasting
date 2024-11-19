@@ -81,23 +81,22 @@ def return_nightimes(df, x):
     load_dotenv(dotenv_path)
     LATITUDE = float(os.getenv("LATITUDE"))
     LONGITUDE = float(os.getenv("LONGITUDE"))
-
+    df = df.sort_values(by = 'time', ascending = True)
+    
     # sunrise/sunset times
     sun = Sun(LATITUDE, LONGITUDE)
     today_sr = sun.get_sunrise_time()
-    print("Sunrise Today ", today_sr)
     today_ss = sun.get_sunset_time()
     test = df['time'].to_list()[0]
     test_localized = test.tz_localize('America/Los_Angeles')
-    delta = (today_sr - test_localized).days
+    delta = (test_localized - today_sr).days
 
     # unique_dates
     df['time_mod'] = df['time'].dt.date
     unique_dates = df['time_mod'].unique()
-
     # calculating start and end series
-    start_series = [today_sr + timedelta(days = delta + i) for i in range(len(unique_dates))]
-    end_series = [today_ss + timedelta(days = delta + i) for i in range(len(unique_dates))]
+    start_series = [today_sr + timedelta(days = delta + i) for i in range(len(unique_dates)+2)]
+    end_series = [today_ss + timedelta(days = delta + i) for i in range(len(unique_dates)+2)]
 
     # note above series are in utc, need to subract x hours for time zone conversion
     start_series = [i - timedelta(hours=x) for i in start_series]

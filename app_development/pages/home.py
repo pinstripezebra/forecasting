@@ -31,11 +31,10 @@ LONGITUDE = float(os.getenv("LONGITUDE"))
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")
 df1['time'] = pd.to_datetime(df1['time'])
 
-# sunrise/sunset times
+# calculating nightime windows
 timezone_offset = 8
 s1, s2 = return_nightimes(df1, timezone_offset)
-print(s1)
-print(s2)
+
 # Defining optimal conditions
 optimal_conditions = {'temperature_2m': 20,
         'cloudcover': 5,
@@ -130,8 +129,7 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
     elif 'overall-click' == ctx.triggered_id:
         forecast_type = 'Forecast_Score'
     time_fig = generate_timeseries_plot(filtered_df, 'time', forecast_type, s1, s2)
-    #time_fig = px.scatter(filtered_df, x = 'time', y = forecast_type,
-    #                        title = '{type} Forecast'.format(type = forecast_type))
+  
 
     return dbc.Row([
                 dbc.Col([
