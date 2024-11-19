@@ -84,12 +84,15 @@ def draw_Text(input_text):
 def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
 
 
-    time_fig = px.scatter(df, x = 'time', y = y,
-                            title = '{type} Forecast'.format(type = y))
+    time_fig = px.line(df, x = 'time', y = y,
+                            title = '{type} Forecast'.format(type = y), 
+                           markers=True)
     i = 0
     # Finding min/max times from forecast series to align with day/night series
-    min_time = df['time'].min().tz_localize('America/Los_Angeles')
-    max_time = df['time'].max().tz_localize('America/Los_Angeles')
+    min_time = df['time'].min().tz_localize('UTC')
+    max_time = df['time'].max().tz_localize('UTC')
+    print('MIN: ', min_time)
+    print('MAX: ', max_time)
     while i < len(s1)-1:
 
         # start is todays sunset
@@ -109,7 +112,7 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
                 line_width=1
             )
         # If its a left edgecase
-        elif (start < min_time) and (end < max_time):
+        elif (start < min_time) and (end > min_time):
             print("HERE")
             start = min_time
             time_fig.add_vrect(
@@ -121,7 +124,7 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
             )
         
         # If its a right edgecase
-        elif (start > min_time) and (end > max_time):
+        elif ( start < max_time) and (end > max_time):
             end = max_time
             time_fig.add_vrect(
                 x0=start,
@@ -132,4 +135,8 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
             )
         
         i += 1
+    time_fig.update_layout(xaxis=dict(
+        range=[min_time, max_time],  # Set the range of the x-axis
+        side='bottom'  # Set the position of the x-axis to the bottom
+        ))
     return time_fig
