@@ -84,7 +84,7 @@ layout = html.Div([
                 # kpi row
                 dbc.Col([
                     html.Div([
-                        html.P('Current Conditions'),
+                        html.H3('Current Conditions'),
                         # Div for kpis
                         html.Div([], id='kpi-indicators')
 
@@ -146,6 +146,35 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
     return dbc.Row([
                 dbc.Col([
                     draw_Image(time_fig)
-                ], width={"size": 6, "offset": 0}),
+                ], width={"size": 5, "offset": 0}),
 
             ])
+
+# callback for kpi's
+@callback(
+    Output(component_id='kpi-indicators', component_property='children'),
+    Input('forecast-click1', 'n_clicks'),
+    Input('forecast-click2', 'n_clicks'),
+)
+
+def update_kpi(val1, val2):
+
+    filtered_df = df1
+    temp = filtered_df['temperature_2m'][0]
+    wind = filtered_df['windspeed_10m'][0]
+    cloud= filtered_df['cloudcover'][0]
+
+
+    return dbc.Row([
+                    dbc.Col([
+                                draw_Text("Temp: " + str(temp))
+                    ], width=3),
+                    dbc.Col([
+                            draw_Text("Wind: " + str(wind))
+                    ], width=3),
+                    dbc.Col([
+                            draw_Text("Cloud: " + str(cloud))
+                    ], width=3),
+                ], style = {'margin-left': '0px',
+                            "width": "80%",
+                            "padding": "0rem 0rem"})

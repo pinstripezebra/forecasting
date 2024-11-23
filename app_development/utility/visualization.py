@@ -7,6 +7,16 @@ from dash import Dash, dcc, html, callback,Input, Output,dash_table
 import dash_bootstrap_components as dbc
 import plotly.express as px
 
+kpi_card_style = {
+    'color': 'black', 
+    'opacity': '0.8',
+    'background':'LightGray'
+}
+
+graph_card_style = {
+    'color': 'black', 
+    'background':'LightGray'
+}
 
 df = pd.read_csv('./Data/test.csv')
 def generate_run_plot():
@@ -66,7 +76,7 @@ def draw_Image(input_figure):
                     dcc.Graph(figure=input_figure.update_layout(template='ggplot2')
                     ) 
                 ])
-            ),  
+            , style = graph_card_style),  
         ])
 
 def draw_Text(input_text):
@@ -78,7 +88,7 @@ def draw_Text(input_text):
                             html.H2(input_text),
                         ], style={'textAlign': 'center'}) 
                 ])
-            ),
+            ,style = kpi_card_style),
         ])
 
 def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
@@ -91,8 +101,6 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
     # Finding min/max times from forecast series to align with day/night series
     min_time = df['time'].min().tz_localize('UTC')
     max_time = df['time'].max().tz_localize('UTC')
-    print('MIN: ', min_time)
-    print('MAX: ', max_time)
     while i < len(s1)-1:
 
         # start is todays sunset
@@ -113,7 +121,6 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
             )
         # If its a left edgecase
         elif (start < min_time) and (end > min_time):
-            print("HERE")
             start = min_time
             time_fig.add_vrect(
                 x0=start,
