@@ -63,7 +63,8 @@ layout = html.Div([
     # Adding selector for overall forecast
     html.Div([
         html.Div([
-                dbc.Row([
+            dbc.Row([
+                dbc.Col([
                     html.Div([
                         dbc.Button('7-day-forecast', outline = True, color = 'primary', id='forecast-click1',className="me-1", n_clicks=0),
                         dbc.Button('1-day-forecast', outline = True, color = 'primary', id='forecast-click2',className="me-1", n_clicks=0),
@@ -78,7 +79,19 @@ layout = html.Div([
                     ])
 
                     ])
-                ])
+                ], style = {"display":"inline-block"}),
+
+                # kpi row
+                dbc.Col([
+                    html.Div([
+                        html.P('Current Conditions'),
+                        # Div for kpis
+                        html.Div([], id='kpi-indicators')
+
+                    ])
+                ], style = {"display":"inline-block"})
+            ])
+
         ])
     ]),
     # Adding filter for forecast period
@@ -95,7 +108,6 @@ layout = html.Div([
 
     # Div for forecast
     html.Div([], id='test-forecast-out')
-
 
 ])
 
