@@ -63,6 +63,8 @@ layout = html.Div([
     # Adding selector for overall forecast
     html.Div([
         html.Div([
+
+            # Top row with filters + KPIs
             dbc.Row([
                 dbc.Col([
                     html.Div([
@@ -97,17 +99,29 @@ layout = html.Div([
     # Adding filter for forecast period
     html.Div([
                 dbc.Row([
-                    html.Div(children= [
-                    html.H3('Running Condition Forecast'),
+                    dbc.Col([
+                        html.Div(children= [
+                            html.H3('Running Condition Forecast'),
+                        ]),
+                    ]),
+                ]),
+    html.Div([
+                dbc.Row([ 
+                        # Div for forecast
+                        dbc.Col([
+                            html.Div([], id='test-forecast-out')
+                        ]),
+                        dbc.Col([
+                            html.Div([draw_Text('This is a test of forecasting conditions')])
+                        ])
                     ])
+                    
+                    
                 ])
         ]),
 
-    # Div for variable selector
-    html.Div([], id='variable-selector'),
-
     # Div for forecast
-    html.Div([], id='test-forecast-out')
+
 
 ])
 
@@ -143,12 +157,10 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
     time_fig = generate_timeseries_plot(filtered_df, 'time', forecast_type, s1, s2)
   
 
-    return dbc.Row([
-                dbc.Col([
+    return dbc.Col([
                     draw_Image(time_fig)
-                ], width={"size": 5, "offset": 0}),
+                ], width={"size": 10, "offset": 0}),
 
-            ])
 
 # callback for kpi's
 @callback(
@@ -170,10 +182,10 @@ def update_kpi(val1, val2):
                         draw_Text_With_Background("Temp: " + str(temp), "./assets/temperature.png")
                     ], width=3),
                     dbc.Col([
-                            draw_Text("Wind: " + str(wind))
+                            draw_Text_With_Background("Wind: " + str(wind), "./assets/wind.png")
                     ], width=3),
                     dbc.Col([
-                            draw_Text("Cloud: " + str(cloud))
+                            draw_Text_With_Background("Cloud: " + str(cloud), "./assets/clouds.png")
                     ], width=3),
                 ], style = {'margin-left': '0px',
                             "width": "80%",

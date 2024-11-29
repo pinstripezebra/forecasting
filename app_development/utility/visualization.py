@@ -85,25 +85,13 @@ def draw_Text(input_text):
             dbc.Card(
                 dbc.CardBody([
                         html.Div([
-                            html.H2(input_text),
+                            html.P(input_text),
                         ], style={'textAlign': 'center'}) 
                 ])
             ,style = kpi_card_style),
         ])
 
 def draw_Text_With_Background(input_text, input_img):
-
-    '''
-    return html.Div([
-            dbc.Card(
-                dbc.CardBody([
-                        html.Div([
-                            html.H2(input_text),
-                        ], style={'textAlign': 'center'}) 
-                ])
-            ,style = kpi_card_style),
-        ])
-        '''
 
     return html.Div([dbc.Card(
     [
@@ -115,13 +103,11 @@ def draw_Text_With_Background(input_text, input_img):
         dbc.CardImgOverlay(
             dbc.CardBody(
                 [
-                    html.H4("Card title", className="card-title"),
-                    html.H2(input_text),
+                    html.H4(input_text, className="card-title"),
                 ],
             ),
         ),
     ],
-    style={"width": "18rem"},
 )])
 def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
 
