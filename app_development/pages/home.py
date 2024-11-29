@@ -12,6 +12,7 @@ import datetime
 import numpy as np
 from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_timeseries_plot, draw_Text_With_Background
 from utility.measurement import find_optimal_window, return_nightimes
+from utility.chatbot import query_condition_description
 import dash_daq as daq
 from suntime import Sun, SunTimeException
 from dotenv import find_dotenv, load_dotenv
@@ -25,6 +26,7 @@ dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 LATITUDE = float(os.getenv("LATITUDE"))
 LONGITUDE = float(os.getenv("LONGITUDE"))
+api_key = os.getenv("ANTHROPIC_API_KEY")
 
 
 # Note will need to pass these in from app
@@ -112,7 +114,10 @@ layout = html.Div([
                             html.Div([], id='test-forecast-out')
                         ]),
                         dbc.Col([
-                            html.Div([draw_Text('This is a test of forecasting conditions')])
+                            html.Div([draw_Text(query_condition_description(api_key, 
+                                                                            [df1['temperature_2m'][0],
+                                                                             df1['windspeed_10m'][0],
+                                                                             df1['cloudcover'][0]]))])
                         ])
                     ])
                     
