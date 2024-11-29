@@ -16,7 +16,7 @@ dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 LATITUDE = float(os.getenv("LATITUDE"))
 LONGITUDE = float(os.getenv("LONGITUDE"))
-repull_data = True
+repull_data = False
 
 # defining path
 parent_path = os.path.dirname(os.path.dirname(__file__))
@@ -86,7 +86,6 @@ app.layout = html.Div([sidebar,
             dash.page_container
     ], style=CONTENT_STYLE)
 ])
-
 
 # Running the app
 if __name__ == '__main__':

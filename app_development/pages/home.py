@@ -70,16 +70,16 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.Div([
-                        dbc.Button('7-day-forecast', outline = True, color = 'primary', id='forecast-click1',className="me-1", n_clicks=0),
-                        dbc.Button('1-day-forecast', outline = True, color = 'primary', id='forecast-click2',className="me-1", n_clicks=0),
+                        dbc.Button('7-day-forecast', color = 'primary', id='forecast-click1',className="me-1", n_clicks=0),
+                        dbc.Button('1-day-forecast', color = 'primary', id='forecast-click2',className="me-1", n_clicks=0),
                         ]),
                     html.Div(children= [
                     html.P('Choose the type of forecast', className = 'text'),
                     html.Div([
-                        dbc.Button('Forecast_Score', outline = True, color = 'primary', id='overall-click',className="me-1", n_clicks=0),
-                        dbc.Button('temp', outline = True, color = 'primary', id='temp-click',className="me-1", n_clicks=0),
-                        dbc.Button('wind', outline = True, color = 'primary', id='wind-click',className="me-1", n_clicks=0),
-                        dbc.Button('cloud', outline = True, color = 'primary', id='cloud-click',className="me-1", n_clicks=0)
+                        dbc.Button('Forecast_Score', color = 'primary', id='overall-click',className="me-1", n_clicks=0),
+                        dbc.Button('temp',  color = 'primary', id='temp-click',className="me-1", n_clicks=0),
+                        dbc.Button('wind',  color = 'primary', id='wind-click',className="me-1", n_clicks=0),
+                        dbc.Button('cloud',  color = 'primary', id='cloud-click',className="me-1", n_clicks=0)
                     ])
 
                     ])
@@ -114,10 +114,10 @@ layout = html.Div([
                             html.Div([], id='test-forecast-out')
                         ]),
                         dbc.Col([
-                            html.Div([draw_Text(query_condition_description(api_key, 
-                                                                            [df1['temperature_2m'][0],
-                                                                             df1['windspeed_10m'][0],
-                                                                             df1['cloudcover'][0]]))])
+                            html.Div(html.H3('Placeholder'))#[draw_Text(query_condition_description(api_key, 
+                                                            #                [df1['temperature_2m'][0],
+                                                             #                df1['windspeed_10m'][0],
+                                                              #               df1['cloudcover'][0]]))])
                         ])
                     ])
                     
@@ -195,3 +195,44 @@ def update_kpi(val1, val2):
                 ], style = {'margin-left': '0px',
                             "width": "80%",
                             "padding": "0rem 0rem"})
+
+
+@callback(
+    [Output("forecast-click1", "className"), 
+     Output("forecast-click2", "className")],
+    [Input("forecast-click1", "n_clicks"),
+     Input("forecast-click2", "n_clicks") ],
+)
+def set_active_forecast_window(*args):
+    ctx = dash.callback_context
+    # get id of triggering button
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    return [
+        "btn active" if button_id == "forecast-click1" else "btn",
+        "btn active" if button_id == "forecast-click2" else "btn" 
+    ]
+
+@callback(
+    [Output("overall-click", "className"), 
+     Output("temp-click", "className"),
+     Output("wind-click", "className"),
+     Output("cloud-click", "className")],
+    [Input("overall-click", "n_clicks"),
+     Input("temp-click", "n_clicks"),
+     Input("wind-click", "n_clicks"),
+     Input("cloud-click", "n_clicks")] ,
+)
+def set_active_forecast_type(*args):
+    ctx = dash.callback_context
+    print(ctx)
+    #if not ctx.triggered or not any(args):
+    #    return ["btn" for _ in range(1, 2)]
+
+    # get id of triggering button
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    return [
+        "btn active" if button_id == "overall-click" else "btn",
+        "btn active" if button_id == "temp-click" else "btn", 
+        "btn active" if button_id == "wind-click" else "btn",
+        "btn active" if button_id == "cloud-click" else "btn"
+    ]
