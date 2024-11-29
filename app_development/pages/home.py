@@ -10,7 +10,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import datetime
 import numpy as np
-from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_timeseries_plot
+from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_timeseries_plot, draw_Text_With_Background
 from utility.measurement import find_optimal_window, return_nightimes
 import dash_daq as daq
 from suntime import Sun, SunTimeException
@@ -167,7 +167,7 @@ def update_kpi(val1, val2):
 
     return dbc.Row([
                     dbc.Col([
-                                draw_Text("Temp: " + str(temp))
+                        draw_Text_With_Background("Temp: " + str(temp), "./assets/temperature.png")
                     ], width=3),
                     dbc.Col([
                             draw_Text("Wind: " + str(wind))
