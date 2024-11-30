@@ -90,9 +90,3 @@ def data_pipeline(repull_data, latitude, longitude):
     else:
         df = pd.read_csv('C://Users//seelc//OneDrive//Desktop//Lucas Desktop Items//Projects//forecasting//app_development//Data//weather_data.csv')
     return df
-
-#repull_data = True
-#LATITUDE = 45.5152
-#LONGITUDE = -122.6784
-#data_pipeline(repull_data, LATITUDE, LONGITUDE)
-#print('done')
