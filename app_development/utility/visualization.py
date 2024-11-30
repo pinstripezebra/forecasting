@@ -19,12 +19,14 @@ graph_card_style = {
 }
 
 df = pd.read_csv('./Data/test.csv')
-def generate_run_plot():
+
+def generate_run_plot(df, target_col):
+
+    '''takes input dictionary and displays next 12 hours of values on a clock'''
 
 
-    r = df['counts'].tolist()
+    r = df[target_col].tolist()[:12]
     theta = np.arange(0,365,30) + 15
-    print(theta)
     width = [30]*12
 
     # hour markers to show on radius of clock
@@ -34,7 +36,7 @@ def generate_run_plot():
         r=r,
         theta=theta,
         width=width,
-        marker_color=df['counts'],
+        marker_color=df[target_col],
         marker_colorscale='Blues',
         marker_line_color="white",
         marker_line_width=2,

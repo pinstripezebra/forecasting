@@ -27,6 +27,9 @@ load_dotenv(dotenv_path)
 LATITUDE = float(os.getenv("LATITUDE"))
 LONGITUDE = float(os.getenv("LONGITUDE"))
 api_key = os.getenv("ANTHROPIC_API_KEY")
+optimal_conditions = {'temperature_2m': float(os.getenv("OPTIMAL_TEMP")),
+                      'cloudcover': float(os.getenv("OPTIMAL_CLOUD")),
+                      'windspeed_10m': float(os.getenv("OPTIMAL_WIND"))}
 
 
 # Note will need to pass these in from app
@@ -36,11 +39,6 @@ df1['time'] = pd.to_datetime(df1['time'])
 # calculating nightime windows
 timezone_offset = 8
 s1, s2 = return_nightimes(df1, timezone_offset)
-
-# Defining optimal conditions
-optimal_conditions = {'temperature_2m': 20,
-        'cloudcover': 5,
-        'windspeed_10m': 0.1}
 
 forecasted_conditions = {'temperature_2m': df1['temperature_2m'].to_list(),
                          'cloudcover': df1['cloudcover'].to_list(),
