@@ -193,3 +193,16 @@ def generate_geographic_plot(df1, response_variable):
        )
     
     return fig
+
+
+def generate_gauge_plot(df, response_val):
+
+    '''takes input dataframe with 1 row and generates a gauge plot'''
+
+    value = df[response_val].to_list()[0]
+    fig = go.Figure(go.Indicator(
+        mode = "gauge+number",
+        value = value,
+        domain = {'x': [0, 1], 'y': [0, 1]},
+        title = {'text': response_val}))
+    return fig

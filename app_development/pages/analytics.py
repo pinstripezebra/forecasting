@@ -6,7 +6,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import dash_bootstrap_components as dbc
 from utility.visualization import generate_run_plot
-from utility.visualization import generate_run_plot, draw_Image, draw_Text
+from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_gauge_plot
 from dotenv import find_dotenv, load_dotenv
 from utility.measurement import find_optimal_window, return_nightimes
 
@@ -51,28 +51,22 @@ layout = html.Div([
 
    # Generates a graph of the forecast
     html.Div([
-            dbc.Card(
-                dbc.CardBody([
-                    dbc.Row(id = 'clock-Row'), 
-                ])
+            dbc.Row(
+                [dbc.Col([
+                    draw_Image(generate_run_plot(df1, 'Forecast_Score')), 
+                ],  width={"size": 6, "offset": 0}),
+                 dbc.Col([
+                     dbc.Row([draw_Image(generate_gauge_plot(df1, 'temperature_2m'))]),
+                     dbc.Row([draw_Image(generate_gauge_plot(df1, 'windspeed_10m'))]),
+                     dbc.Row([draw_Image(generate_gauge_plot(df1, 'cloudcover'))])
+                 ], width={"size": 6, "offset": 0})
+                ]
             )
     ])
 ])
 
 
-# callback for clock row
-@callback(
-    Output(component_id='clock-Row', component_property='children'),
-    Input('forecast-click', 'n_clicks'),
-)
-def update_kpi(button1):
 
-    return dbc.Row([
-                dbc.Col([
-                    draw_Image(generate_run_plot(df1, 'Forecast_Score'))
-                ], width={"size": 6, "offset": 0}),
-
-            ])
 
 
 # callback for kpi row
