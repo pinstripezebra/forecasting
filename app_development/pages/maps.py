@@ -55,5 +55,5 @@ def update_timeseries(filter_var):
 
     filtered_df = df1
     geo_fig = generate_geographic_plot(filtered_df, filter_var)
-  
-    return draw_Image(geo_fig)
+    map_height = 800
+    return draw_Image(geo_fig, map_height)
