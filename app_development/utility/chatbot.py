@@ -31,7 +31,8 @@ def query_condition_description(api_key, input):
               weather forecasting and are trying to help users understand upcoming weather.''',
         messages=[
         {"role": "user", "content": '''If the forecasted temperature is {degrees} celcius with {wind} kph wind and 
-                                        cloud cover {cloud} %, what will running in this be like?'''.format(degrees = degrees, wind = wind, cloud = cloud)}
+                                        cloud cover {cloud} %, what will running in this be like? Limit your 
+                                        response to less than 100 words'''.format(degrees = degrees, wind = wind, cloud = cloud)}
         ]
      )   
 

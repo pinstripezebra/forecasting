@@ -48,12 +48,14 @@ layout = html.Div([
     draw_Text(html.P("The best expected running time today is between {start} and {end}.".format(start = start_time, end = end_time))),
 
     ],style= {'width': '50%'}),
-    html.H3('condition overview'),
-    #html.Div([
-    #    draw_Text(query_condition_description(api_key, [best_bucket['temperature_2m'].to_list()[0],
-    #                                                    best_bucket['windspeed_10m'].to_list()[0],
-    #                                                    best_bucket['cloudcover'].to_list()[0]]))
-    #]),
+    html.H3('Condition Overview'),
+    dbc.Row([
+        html.Div([
+            draw_Text(query_condition_description(api_key, [best_bucket['temperature_2m'].to_list()[0],
+                                                        best_bucket['windspeed_10m'].to_list()[0],
+                                                        best_bucket['cloudcover'].to_list()[0]]))
+        ])
+    ]),
     html.Br(),
 
    # Generates a graph of the forecast
