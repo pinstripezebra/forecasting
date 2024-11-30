@@ -10,6 +10,8 @@ from utility.visualization import generate_run_plot, draw_Image, draw_Text, gene
 from dotenv import find_dotenv, load_dotenv
 from utility.measurement import find_optimal_window, return_nightimes
 
+dash.register_page(__name__)
+
 # Note will need to pass these in from app
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")
 df1['time'] = pd.to_datetime(df1['time'])
@@ -31,19 +33,27 @@ conditions = find_optimal_window(optimal_conditions, forecasted_conditions, max_
 # Adding forecast to dataframe
 df1['Forecast_Score'] = conditions['Score']
 
+# determining optimal start/stop times
+next_12_hours = df1.head(12)
+best_bucket = df1[df1['Forecast_Score'] == df1['Forecast_Score'].max()]
+start_time = best_bucket['time'].to_list()[0]
+end_time = start_time + timedelta(hours=1)
 
-dash.register_page(__name__)
-
-current_datetime = pd.Timestamp.now()
 
 layout = html.Div([
     html.H1('Here is your Running Forecast Today'),
 
     html.Div([
-            dbc.Button('Forecast', outline = True, color = 'primary', id='forecast-click',className="me-1", n_clicks=0),
             dbc.Card(
                 dbc.CardBody([
-                    dbc.Row(id = 'kpi-Row'),   
+                    dbc.Row([
+                        dbc.Col([
+                                draw_Text("Start: " + str(start_time))
+                        ], width=4),
+                        dbc.Col([
+                            draw_Text("End: " + str(end_time))
+                        ], width=4),
+                    ]),   
                 ]), color = 'dark'
             )
         ]),
@@ -74,30 +84,3 @@ layout = html.Div([
 ])
 
 
-
-
-
-# callback for kpi row
-@callback(
-    Output(component_id='kpi-Row', component_property='children'),
-    Input('forecast-click', 'n_clicks'),
-)
-def update_kpi(button1):
-
-    # Copying and filtering dataframe
-    filtered_df = df1
-    next_12_hours = df1.head(12)
-    best_bucket = df1[df1['Forecast_Score'] == df1['Forecast_Score'].max()]
-    #start_time = current_datetime + timedelta(hours=9)
-    #end_time = current_datetime + timedelta(hours=12)
-
-    start_time = best_bucket['time'].to_list()[0]
-    end_time = start_time + timedelta(hours=1)
-    return dbc.Row([
-                        dbc.Col([
-                                draw_Text("Start: " + str(start_time))
-                        ], width=4),
-                        dbc.Col([
-                            draw_Text("End: " + str(end_time))
-                        ], width=4),
-                    ])
