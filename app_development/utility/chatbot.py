@@ -25,7 +25,7 @@ def query_condition_description(api_key, input):
     )
     message = client.messages.create(
         model="claude-3-haiku-20240307",
-        max_tokens=1000,
+        max_tokens=200,
         temperature=0.0,
         system='''you are a helpful meteorologist assisstant, you have an in depth understanding of 
               weather forecasting and are trying to help users understand upcoming weather.''',

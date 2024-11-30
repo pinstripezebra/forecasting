@@ -28,7 +28,7 @@ layout = html.Div([
                     options = [{"label": i, "value": i} for i in filter_vars],
                     value = filter_vars[0])
              
-            ])
+            ], style = {"width": "30%"})
         ]),
 
         # Row for map-plot

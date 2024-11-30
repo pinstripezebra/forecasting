@@ -9,6 +9,7 @@ from utility.visualization import generate_run_plot
 from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_gauge_plot
 from dotenv import find_dotenv, load_dotenv
 from utility.measurement import find_optimal_window, return_nightimes
+from utility.chatbot import query_condition_description
 
 dash.register_page(__name__)
 
@@ -19,6 +20,7 @@ df1['time'] = pd.to_datetime(df1['time'])
 # loading environmental variables
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
+api_key = os.getenv("ANTHROPIC_API_KEY")
 optimal_conditions = {'temperature_2m': float(os.getenv("OPTIMAL_TEMP")),
                       'cloudcover': float(os.getenv("OPTIMAL_CLOUD")),
                       'windspeed_10m': float(os.getenv("OPTIMAL_WIND"))}
@@ -35,28 +37,23 @@ df1['Forecast_Score'] = conditions['Score']
 
 # determining optimal start/stop times
 next_12_hours = df1.head(12)
-best_bucket = df1[df1['Forecast_Score'] == df1['Forecast_Score'].max()]
+best_bucket = next_12_hours[next_12_hours['Forecast_Score'] == next_12_hours['Forecast_Score'].max()]
 start_time = best_bucket['time'].to_list()[0]
 end_time = start_time + timedelta(hours=1)
 
 
 layout = html.Div([
-    html.H1('Here is your Running Forecast Today'),
-
+    html.H1('Running Outlook Today'),
     html.Div([
-            dbc.Card(
-                dbc.CardBody([
-                    dbc.Row([
-                        dbc.Col([
-                                draw_Text("Start: " + str(start_time))
-                        ], width=4),
-                        dbc.Col([
-                            draw_Text("End: " + str(end_time))
-                        ], width=4),
-                    ]),   
-                ]), color = 'dark'
-            )
-        ]),
+    draw_Text(html.P("The best expected running time today is between {start} and {end}.".format(start = start_time, end = end_time))),
+
+    ],style= {'width': '50%'}),
+    html.H3('condition overview'),
+    #html.Div([
+    #    draw_Text(query_condition_description(api_key, [best_bucket['temperature_2m'].to_list()[0],
+    #                                                    best_bucket['windspeed_10m'].to_list()[0],
+    #                                                    best_bucket['cloudcover'].to_list()[0]]))
+    #]),
     html.Br(),
 
    # Generates a graph of the forecast
