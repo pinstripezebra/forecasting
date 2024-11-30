@@ -70,13 +70,13 @@ def generate_run_plot(df, target_col):
     )
     return fig
 
-def draw_Image(input_figure):
+def draw_Image(input_figure, height = 450):
     '''draw images returns a graph inside a card and div component'''
 
     return html.Div([
             dbc.Card(
                 dbc.CardBody([
-                    dcc.Graph(figure=input_figure.update_layout(template='ggplot2')
+                    dcc.Graph(figure=input_figure.update_layout(template='ggplot2', height=height)
                     ) 
                 ])
             , style = graph_card_style),  

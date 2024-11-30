@@ -51,17 +51,25 @@ layout = html.Div([
 
    # Generates a graph of the forecast
     html.Div([
-            dbc.Row(
-                [dbc.Col([
+        dbc.Row([
+            dbc.Col([
                     draw_Image(generate_run_plot(df1, 'Forecast_Score')), 
-                ],  width={"size": 6, "offset": 0}),
-                 dbc.Col([
-                     dbc.Row([draw_Image(generate_gauge_plot(df1, 'temperature_2m'))]),
-                     dbc.Row([draw_Image(generate_gauge_plot(df1, 'windspeed_10m'))]),
-                     dbc.Row([draw_Image(generate_gauge_plot(df1, 'cloudcover'))])
-                 ], width={"size": 6, "offset": 0})
-                ]
-            )
+                ],  
+            width={"size": 6, "offset": 0}),
+            dbc.Col([
+                    dbc.Row([
+                        draw_Image(generate_gauge_plot(df1, 'temperature_2m'), 200)
+                    ]),
+                    dbc.Row([
+                        draw_Image(generate_gauge_plot(df1, 'cloudcover'), 200)
+                    ]),
+                    dbc.Row([
+                        draw_Image(generate_gauge_plot(df1, 'windspeed_10m'), 200)
+                    ]),
+
+                 ]) 
+        ])
+            
     ])
 ])
 
