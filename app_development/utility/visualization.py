@@ -165,3 +165,28 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
         side='bottom'  # Set the position of the x-axis to the bottom
         ))
     return time_fig
+
+
+
+def generate_geographic_plot(df1, response_variable):
+    '''
+    Takes input dataframe and response variable, generates geographic plot
+    of response variable
+    '''
+    fig = px.density_mapbox(df1.sort_values(by = 'time'), 
+                        radius=100,
+                        opacity=0.7,
+                        lat=df1.latitude, 
+                        lon = df1.longitude, 
+                        z = df1[response_variable],
+                        hover_data=response_variable,
+                        animation_frame='time',
+                        zoom=9, 
+                        mapbox_style="open-street-map")
+    fig.update_layout( height = 1000, width = 1200, 
+                  mapbox_style="carto-darkmatter",
+                  margin={"r":0,"t":0,"l":0,"b":0},
+                  
+       )
+    
+    return fig
