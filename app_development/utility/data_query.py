@@ -52,8 +52,7 @@ def return_surrounding_weather(latitude, longitude, margin = 0.01, forecast_days
     locations = list(product(latitudes, longitudes))
     output_data = []
     for location in locations:
-
-        sample = return_single_point(latitude, longitude, forecast_days)
+        sample = return_single_point(location[0], location[1], forecast_days)
         output_data.append(sample)
 
     combined_weather_data = pd.concat(output_data)
@@ -90,3 +89,4 @@ def data_pipeline(repull_data, latitude, longitude):
     else:
         df = pd.read_csv('C://Users//seelc//OneDrive//Desktop//Lucas Desktop Items//Projects//forecasting//app_development//Data//weather_data.csv')
     return df
+
