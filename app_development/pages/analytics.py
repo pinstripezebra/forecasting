@@ -12,6 +12,7 @@ from utility.measurement import find_optimal_window, return_nightimes
 
 # Note will need to pass these in from app
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")
+df1['time'] = pd.to_datetime(df1['time'])
 
 # loading environmental variables
 dotenv_path = find_dotenv()
@@ -83,13 +84,18 @@ def update_kpi(button1):
 
     # Copying and filtering dataframe
     filtered_df = df1
-    start_time = current_datetime + timedelta(hours=9)
-    end_time = current_datetime + timedelta(hours=12)
+    next_12_hours = df1.head(12)
+    best_bucket = df1[df1['Forecast_Score'] == df1['Forecast_Score'].max()]
+    #start_time = current_datetime + timedelta(hours=9)
+    #end_time = current_datetime + timedelta(hours=12)
+
+    start_time = best_bucket['time'].to_list()[0]
+    end_time = start_time + timedelta(hours=1)
     return dbc.Row([
                         dbc.Col([
-                                draw_Text("Window Start: " + str(start_time))
+                                draw_Text("Start: " + str(start_time))
                         ], width=4),
                         dbc.Col([
-                            draw_Text("Window End: " + str(end_time))
+                            draw_Text("End: " + str(end_time))
                         ], width=4),
                     ])
