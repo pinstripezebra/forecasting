@@ -40,7 +40,7 @@ s1, s2 = return_nightimes(df1, timezone_offset)
 # Defining optimal conditions
 optimal_conditions = {'temperature_2m': 20,
         'cloudcover': 5,
-        'windspeed_10m': 0}
+        'windspeed_10m': 0.1}
 
 forecasted_conditions = {'temperature_2m': df1['temperature_2m'].to_list(),
                          'cloudcover': df1['cloudcover'].to_list(),

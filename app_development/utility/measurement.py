@@ -22,9 +22,9 @@ test_forecast = {'temperature_2m':makelist(200),
 def measure_running_conditions(optimal_values, forecasted_values):
 
     '''helper function to measure difference between two lists, one containing
-    forecasted conditions and one containing actual conditions'''
+    forecasted conditions and one containing actual conditions. Returns MAPE scaled to 0-10 range'''
 
-    score = sum([abs(float(i) - float(j))**2 for i, j in zip(optimal_values, forecasted_values)])
+    score = sum([(abs(float(i) - float(j))/i)*10 for i, j in zip(optimal_values, forecasted_values)])/len(optimal_values)
     return score
 
 
@@ -61,8 +61,12 @@ def find_optimal_window(optimal_conditions, forecasted_conditions, max_window):
         ranking_indice.append(indice)
         ranking.append(current_score)
 
+    # normalizing score to 1-10 scale
+    min_val = min(ranking)
+    max_val = max(ranking)
+    normalized_score = [1 + 9 * (x - min_val) / (max_val - min_val) for x in ranking]
     score_df = pd.DataFrame({'Indice': ranking_indice,
-                             'Score': ranking})
+                             'Score': normalized_score})
     return score_df
 
 
