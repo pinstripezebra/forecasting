@@ -21,13 +21,14 @@ graph_card_style = {
 df = pd.read_csv('./Data/test.csv')
 def generate_run_plot():
 
-    import plotly.graph_objects as go
 
     r = df['counts'].tolist()
-    theta = np.arange(7.5,368,15)
-    width = [15]*24
+    theta = np.arange(0,365,30) + 15
+    print(theta)
+    width = [30]*12
 
-    ticktexts = [f'$\large{i}$' if i % 6 == 0 else '' for i in np.arange(24)]
+    # hour markers to show on radius of clock
+    ticktexts = [12 if i == 0 else i for i in np.arange(12)]
 
     fig = go.Figure(go.Barpolar(
         r=r,
@@ -53,11 +54,11 @@ def generate_run_plot():
                 showgrid=False,
             ),
             angularaxis=dict(
-                tickvals=np.arange(0,360,15),
+                tickvals=np.arange(0,360,30),
                 ticktext=ticktexts,
                 showline=True,
                 direction='clockwise',
-                period=24,
+                period=12,
                 linecolor='white',
                 gridcolor='white',
                 showticklabels=True,
