@@ -11,7 +11,7 @@ import plotly.express as px
 import datetime
 import numpy as np
 from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_timeseries_plot, draw_Text_With_Background
-from utility.measurement import find_optimal_window, return_nightimes
+from utility.measurement import find_optimal_window, return_nightimes, get_current_conditions
 from utility.chatbot import query_condition_description
 import dash_daq as daq
 from suntime import Sun, SunTimeException
@@ -170,10 +170,11 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
 def update_kpi(val1, val2):
 
     filtered_df = df1
-    temp = filtered_df['temperature_2m'][0]
-    wind = filtered_df['windspeed_10m'][0]
-    cloud= filtered_df['cloudcover'][0]
-
+    filtered_df = get_current_conditions(filtered_df)
+    print(type(filtered_df))
+    temp = filtered_df['temperature_2m']
+    wind = filtered_df['windspeed_10m']
+    cloud= filtered_df['cloudcover']
 
     return dbc.Row([
                     dbc.Col([
@@ -200,7 +201,7 @@ def set_active_forecast_window(*args):
     ctx = dash.callback_context
 
     if not ctx.triggered or not any(args):
-       return ["btn" for _ in range(1, 2)] 
+       return ["btn" for _ in range(1, 3)] 
     # get id of triggering button
     button_id = ctx.triggered[0]["prop_id"].split(".")[0]
     return [
@@ -222,7 +223,7 @@ def set_active_forecast_type(*args):
     ctx = dash.callback_context
     print(ctx)
     if not ctx.triggered or not any(args):
-       return ["btn" for _ in range(1, 4)] 
+       return ["btn" for _ in range(1, 5)] 
 
     # get id of triggering button
     button_id = ctx.triggered[0]["prop_id"].split(".")[0]

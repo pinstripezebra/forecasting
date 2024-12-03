@@ -115,10 +115,15 @@ def get_current_conditions(df):
     '''Takes input dataframe of ourly weather data, determines current time,
     and returns a dictionary of weather conditions closest to the current time'''
 
-    now = datetime.datetime.now()
+    now = datetime.now()
     df['time_delta'] = [abs(now - i) for i in pd.to_datetime(df['time'])]
-    filtered_df = df[df['time_delta'] == min(df['time_delta'])]
-    
-    return filtered_df
+    filtered_df = df[df['time_delta'] == min(df['time_delta'])].reset_index()
+
+    output = {
+        'temperature_2m': filtered_df['temperature_2m'][0],
+        'windspeed_10m': filtered_df['windspeed_10m'][0],
+        'cloudcover': filtered_df['cloudcover'][0],
+    }
+    return output
 
 
