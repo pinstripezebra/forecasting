@@ -25,7 +25,9 @@ def return_single_point(latitude, longitude, forecast_days = 3):
     # Selecting options
     options = ForecastOptions(latitude = latitude, 
                                 longitude = longitude,
-                                forecast_days=forecast_days)
+                                forecast_days=forecast_days,
+                                timezone="America/Los_Angeles")
+                                
 
     # Pulling Data
     client = OpenMeteo(options, hourly)

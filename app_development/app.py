@@ -16,7 +16,7 @@ dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 LATITUDE = float(os.getenv("LATITUDE"))
 LONGITUDE = float(os.getenv("LONGITUDE"))
-repull_data = False
+repull_data = True
 
 # defining path
 parent_path = os.path.dirname(os.path.dirname(__file__))
