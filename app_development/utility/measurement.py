@@ -110,9 +110,15 @@ def return_nightimes(df, x):
 
 
 
-# testing
-#df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")
-#df1['time'] = pd.to_datetime(df1['time'])
+def get_current_conditions(df):
 
-#s1, s2 = return_nightimes(df1)
-#print(s1)
+    '''Takes input dataframe of ourly weather data, determines current time,
+    and returns a dictionary of weather conditions closest to the current time'''
+
+    now = datetime.datetime.now()
+    df['time_delta'] = [abs(now - i) for i in pd.to_datetime(df['time'])]
+    filtered_df = df[df['time_delta'] == min(df['time_delta'])]
+    
+    return filtered_df
+
+
