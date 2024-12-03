@@ -68,13 +68,13 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.Div([
-                        dbc.Button('7-day-forecast', color = 'primary', id='forecast-click1',className="me-1", n_clicks=0),
+                        dbc.Button('7-day-forecast', color = 'primary', id='forecast-click1',className="btn active", n_clicks=0),
                         dbc.Button('1-day-forecast', color = 'primary', id='forecast-click2',className="me-1", n_clicks=0),
                         ]),
                     html.Div(children= [
                     html.P('Choose the type of forecast', className = 'text'),
                     html.Div([
-                        dbc.Button('Forecast_Score', color = 'primary', id='overall-click',className="me-1", n_clicks=0),
+                        dbc.Button('Forecast_Score', color = 'primary', id='overall-click',className="btn active", n_clicks=0),
                         dbc.Button('temp',  color = 'primary', id='temp-click',className="me-1", n_clicks=0),
                         dbc.Button('wind',  color = 'primary', id='wind-click',className="me-1", n_clicks=0),
                         dbc.Button('cloud',  color = 'primary', id='cloud-click',className="me-1", n_clicks=0)
@@ -117,15 +117,10 @@ layout = html.Div([
                                                              #                df1['windspeed_10m'][0],
                                                               #               df1['cloudcover'][0]]))])
                         ])
-                    ])
-                    
+                    ])   
                     
                 ])
         ]),
-
-    # Div for forecast
-
-
 ])
 
 
@@ -203,6 +198,9 @@ def update_kpi(val1, val2):
 )
 def set_active_forecast_window(*args):
     ctx = dash.callback_context
+
+    if not ctx.triggered or not any(args):
+       return ["btn" for _ in range(1, 2)] 
     # get id of triggering button
     button_id = ctx.triggered[0]["prop_id"].split(".")[0]
     return [
@@ -223,8 +221,8 @@ def set_active_forecast_window(*args):
 def set_active_forecast_type(*args):
     ctx = dash.callback_context
     print(ctx)
-    #if not ctx.triggered or not any(args):
-    #    return ["btn" for _ in range(1, 2)]
+    if not ctx.triggered or not any(args):
+       return ["btn" for _ in range(1, 4)] 
 
     # get id of triggering button
     button_id = ctx.triggered[0]["prop_id"].split(".")[0]
