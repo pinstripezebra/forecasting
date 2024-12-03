@@ -201,7 +201,7 @@ def set_active_forecast_window(*args):
     ctx = dash.callback_context
 
     if not ctx.triggered or not any(args):
-       return ["btn" for _ in range(1, 3)] 
+       return ["btn active"] + ["btn" for _ in range(1, 2)] 
     # get id of triggering button
     button_id = ctx.triggered[0]["prop_id"].split(".")[0]
     return [
@@ -223,7 +223,7 @@ def set_active_forecast_type(*args):
     ctx = dash.callback_context
     print(ctx)
     if not ctx.triggered or not any(args):
-       return ["btn" for _ in range(1, 5)] 
+       return ["btn"] + ["btn active"] + ["btn" for _ in range(1, 2)] 
 
     # get id of triggering button
     button_id = ctx.triggered[0]["prop_id"].split(".")[0]
