@@ -89,4 +89,4 @@ app.layout = html.Div([sidebar,
 
 # Running the app
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
