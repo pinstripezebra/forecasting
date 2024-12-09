@@ -10,6 +10,9 @@ from dotenv import find_dotenv, load_dotenv
 import json
 from utility.data_query import data_pipeline
 import dash_auth
+import flask
+from flask_login import LoginManager, UserMixin
+
 
 
 # loading environmental variables
@@ -36,9 +39,31 @@ with open(parent_path + '/app_development/style/content_style.json') as f:
 
 
 # defining and Initializing the app
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/')
-dash_auth.BasicAuth(app,{username:password})
+server = flask.Flask(__name__)
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/', server = server)
+#auth = dash_auth.BasicAuth(app,{username:password})
 
+# Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
+server.config.update(SECRET_KEY=os.getenv('SECRET_KEY'))
+
+# Login manager object will be used to login / logout users
+login_manager = LoginManager()
+login_manager.init_app(server)
+login_manager.login_view = '/login'
+
+# User data model. It has to have at least self.id as a minimum
+
+class User(UserMixin):
+    def __init__(self, username):
+        self.id = username
+
+@ login_manager.user_loader
+def load_user(username):
+    ''' This function loads the user by user id. Typically this looks up the user from a user database.
+        We won't be registering or looking up users in this example, since we'll just login using LDAP server.
+        So we'll simply return a User object with the passed in username.
+    '''
+    return User(username)
 
 
 # Defining components
@@ -94,4 +119,4 @@ app.layout = html.Div([sidebar,
 
 # Running the app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
