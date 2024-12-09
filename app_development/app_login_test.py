@@ -41,7 +41,7 @@ with open(parent_path + '/app_development/style/content_style.json') as f:
 
 # defining and Initializing the app
 server = flask.Flask(__name__)
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/', server = server)
+app = Dash(__name__,  external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/', server = server)
 #auth = dash_auth.BasicAuth(app,{username:password})
 
 # Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
@@ -98,58 +98,8 @@ logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
                    dcc.Link('Home', href='/')
                    ])  # end div
 
-# Defining components
-sidebar = html.Div(children = [
-            html.Img(
-                        alt="Link to Github",
-                        src="./assets/app_logo.png",
-                        style={'height':'10%', 'width':'40%', 'margin': 'auto'}
-                    ),
-            html.H3("Pages"),
-            html.Hr(),
-            html.Div([ 
-                dbc.Nav([
-                    dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values()
-                ], vertical=True)
 
-            ]),
-            html.H3("Description"),
-            html.P(
-                "Your custom running companion allowing you to plan out your perfect time to run ensuring you never miss a workout.", className="text"
-            ),
-            html.H3("Model"
-            ),
-            html.P(
-                "This project uses machine learning to forecast running conditions and provides a personalized running reccommendation time based on user preferences.", className="text"
-            ),
 
-            html.H3("Code"
-            ),
-            html.P(
-                "The complete code for this project is available on github.", className="text"
-            ),
-            html.A(
-                href="https://github.com/pinstripezebra/Dash-Tutorial",
-                children=[
-                    html.Img(
-                        alt="Link to Github",
-                        src="./assets/github_logo.png",
-                        style={'height':'3%', 'width':'8%'}
-                    )
-                ],
-                style = {'color':'black'}
-            )
-
-        ], style=SIDEBAR_STYLE
-    )
-
-'''
-app.layout = html.Div([sidebar,
-    html.Div([
-            dash.page_container
-    ], style=CONTENT_STYLE)
-])
-'''
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -159,21 +109,48 @@ app.layout = html.Div([
     html.Br(),
     html.Hr(),
     html.Br(),
-    html.Div(id='page-content'), 
-    html.Div([sidebar,
-    html.Div([
-            dash.page_container
-    ], style=CONTENT_STYLE)
-]),
+    html.Div(id='page-content'),
 ])
-page_1_layout = html.Div([html.H1('Page 1')])
-page_2_layout = html.Div([html.H1('Page 2')])
+
+
+index_page = html.Div([
+    dcc.Link('Go to Page 1', href='/page-1'),
+    html.Br(),
+    dcc.Link('Go to Page 2', href='/page-2'),
+])
+page_1_layout = html.Div([
+    html.H1('Page 1'),
+    dcc.Dropdown(
+        id='page-1-dropdown',
+        options=[{'label': i, 'value': i} for i in ['LA', 'NYC', 'MTL']],
+        value='LA'
+    ),
+    html.Div(id='page-1-content'),
+    html.Br(),
+    dcc.Link('Go to Page 2', href='/page-2'),
+    html.Br(),
+    dcc.Link('Go back to home', href='/'),
+])
+
+page_2_layout = html.Div([
+    html.H1('Page 2'),
+    dcc.RadioItems(
+        id='page-2-radios',
+        options=[{'label': i, 'value': i} for i in ['Orange', 'Blue', 'Red']],
+        value='Orange'
+    ),
+    html.Div(id='page-2-content'),
+    html.Br(),
+    dcc.Link('Go to Page 1', href='/page-1'),
+    html.Br(),
+    dcc.Link('Go back to home', href='/')
+])
 index_page = html.Div([html.H1('index page')])
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
 
 
-@app.callback(
+@callback(
     [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
     if n_clicks > 0:
@@ -188,7 +165,7 @@ def login_button_click(n_clicks, username, password):
 
 # Main router
 
-@app.callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
+@callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
               [Input('url', 'pathname')])
 def display_page(pathname):
     ''' callback to determine layout to return '''
@@ -228,6 +205,16 @@ def display_page(pathname):
         view = index_page
     # You could also return a 404 "URL not found" page here
     return view, url
+
+@callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
+def login_status(url):
+    ''' callback to display login/logout link in the header '''
+    if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated \
+            and url != '/logout':  # If the URL is /logout, then the user is about to be logged out anyways
+        return dcc.Link('logout', href='/logout'), current_user.get_id()
+    else:
+        return dcc.Link('login', href='/login'), 'loggedout'
+
 
 # Running the app
 if __name__ == '__main__':
