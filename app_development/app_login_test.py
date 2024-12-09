@@ -23,7 +23,7 @@ LATITUDE, LONGITUDE = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE")
 repull_data = True
 
 # authentication
-username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
+test_username, test_password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
 
 # defining path
 parent_path = os.path.dirname(os.path.dirname(__file__))
@@ -43,7 +43,7 @@ with open(parent_path + '/app_development/style/content_style.json') as f:
 server = flask.Flask(__name__)
 app = Dash(__name__,  external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/', server = server)
 #auth = dash_auth.BasicAuth(app,{username:password})
-
+username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
 # Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
 server.config.update(SECRET_KEY=os.getenv('SECRET_KEY'))
 
@@ -99,8 +99,6 @@ logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
                    ])  # end div
 
 
-
-
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     dcc.Location(id='redirect', refresh=True),
@@ -131,7 +129,6 @@ page_1_layout = html.Div([
     html.Br(),
     dcc.Link('Go back to home', href='/'),
 ])
-
 page_2_layout = html.Div([
     html.H1('Page 2'),
     dcc.RadioItems(
@@ -154,7 +151,7 @@ index_page = html.Div([html.H1('index page')])
     [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
     if n_clicks > 0:
-        if username == 'test' and password == 'test':
+        if username == test_username and password == test_password:
             user = User(username)
             login_user(user)
             return '/success', ''
