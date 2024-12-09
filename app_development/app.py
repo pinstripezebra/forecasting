@@ -9,14 +9,17 @@ import numpy as np
 from dotenv import find_dotenv, load_dotenv
 import json
 from utility.data_query import data_pipeline
+import dash_auth
 
 
 # loading environmental variables
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
-LATITUDE = float(os.getenv("LATITUDE"))
-LONGITUDE = float(os.getenv("LONGITUDE"))
+LATITUDE, LONGITUDE = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE"))
 repull_data = True
+
+# authentication
+username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
 
 # defining path
 parent_path = os.path.dirname(os.path.dirname(__file__))
@@ -34,6 +37,8 @@ with open(parent_path + '/app_development/style/content_style.json') as f:
 
 # defining and Initializing the app
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/')
+dash_auth.BasicAuth(app,{username:password})
+
 
 
 # Defining components
