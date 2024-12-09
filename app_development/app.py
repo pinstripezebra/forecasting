@@ -1,6 +1,7 @@
 # For data manipulation, visualization, app
 import dash
-from dash import Dash, dcc, html, callback,Input, Output,dash_table
+from dash import Dash, dcc, html, callback, dash_table
+from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
@@ -11,7 +12,7 @@ import json
 from utility.data_query import data_pipeline
 import dash_auth
 import flask
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin, login_user
 
 
 
@@ -64,7 +65,38 @@ def load_user(username):
         So we'll simply return a User object with the passed in username.
     '''
     return User(username)
+# Login screen
+login = html.Div([dcc.Location(id='url_login', refresh=True),
+                  html.H2('''Please log in to continue:''', id='h1'),
+                  dcc.Input(placeholder='Enter your username',
+                            type='text', id='uname-box'),
+                  dcc.Input(placeholder='Enter your password',
+                            type='password', id='pwd-box'),
+                  html.Button(children='Login', n_clicks=0,
+                              type='submit', id='login-button'),
+                  html.Div(children='', id='output-state'),
+                  html.Br(),
+                  dcc.Link('Home', href='/')])
 
+# Successful login
+success = html.Div([html.Div([html.H2('Login successful.'),
+                              html.Br(),
+                              dcc.Link('Home', href='/')])  # end div
+                    ])  # end div
+
+# Failed Login
+failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
+                             html.Br(),
+                             html.Div([login]),
+                             dcc.Link('Home', href='/')
+                             ])  # end div
+                   ])  # end div
+
+# logout
+logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
+                   html.Br(),
+                   dcc.Link('Home', href='/')
+                   ])  # end div
 
 # Defining components
 sidebar = html.Div(children = [
@@ -116,6 +148,22 @@ app.layout = html.Div([sidebar,
             dash.page_container
     ], style=CONTENT_STYLE)
 ])
+
+# Callback function to login the user, or update the screen if the username or password are incorrect
+
+
+@app.callback(
+    [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
+def login_button_click(n_clicks, username, password):
+    if n_clicks > 0:
+        if username == 'test' and password == 'test':
+            user = User(username)
+            login_user(user)
+            return '/success', ''
+        else:
+            return '/login', 'Incorrect username or password'
+
+    return dash.no_update, dash.no_update  # Return a placeholder to indicate no update
 
 # Running the app
 if __name__ == '__main__':
