@@ -12,7 +12,7 @@ import json
 from utility.data_query import data_pipeline
 import dash_auth
 import flask
-from flask_login import LoginManager, UserMixin, login_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 
 
 
@@ -149,6 +149,25 @@ app.layout = html.Div([sidebar,
     ], style=CONTENT_STYLE)
 ])
 
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    dcc.Location(id='redirect', refresh=True),
+    dcc.Store(id='login-status', storage_type='session'),
+    html.Div(id='user-status-div'),
+    html.Br(),
+    html.Hr(),
+    html.Br(),
+    html.Div(id='page-content'), 
+    html.Div([sidebar,
+    html.Div([
+            dash.page_container
+    ], style=CONTENT_STYLE)
+]),
+])
+page_1_layout = html.Div([html.H1('Page 1')])
+page_2_layout = html.Div([html.H1('Page 2')])
+index_page = html.Div([html.H1('index page')])
+
 # Callback function to login the user, or update the screen if the username or password are incorrect
 
 
@@ -164,6 +183,49 @@ def login_button_click(n_clicks, username, password):
             return '/login', 'Incorrect username or password'
 
     return dash.no_update, dash.no_update  # Return a placeholder to indicate no update
+
+# Main router
+
+@app.callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
+              [Input('url', 'pathname')])
+def display_page(pathname):
+    ''' callback to determine layout to return '''
+    # We need to determine two things for everytime the user navigates:
+    # Can they access this page? If so, we just return the view
+    # Otherwise, if they need to be authenticated first, we need to redirect them to the login page
+    # So we have two outputs, the first is which view we'll return
+    # The second one is a redirection to another page is needed
+    # In most cases, we won't need to redirect. Instead of having to return two variables everytime in the if statement
+    # We setup the defaults at the beginning, with redirect to dash.no_update; which simply means, just keep the requested url
+    view = None
+    url = dash.no_update
+    if pathname == '/login':
+        view = login
+    elif pathname == '/success':
+        if current_user.is_authenticated:
+            view = success
+        else:
+            view = failed
+    elif pathname == '/logout':
+        if current_user.is_authenticated:
+            logout_user()
+            view = logout
+        else:
+            view = login
+            url = '/login'
+
+    elif pathname == '/page-1':
+        view = page_1_layout
+    elif pathname == '/page-2':
+        if current_user.is_authenticated:
+            view = page_2_layout
+        else:
+            view = 'Redirecting to login...'
+            url = '/login'
+    else:
+        view = index_page
+    # You could also return a 404 "URL not found" page here
+    return view, url
 
 # Running the app
 if __name__ == '__main__':
