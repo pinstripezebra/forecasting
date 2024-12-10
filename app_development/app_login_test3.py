@@ -79,34 +79,25 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   html.Div(children='', id='output-state'),
                   html.Br()])
 
-# Successful login
-
-success = html.Div([html.Div([html.H2('Login successful.'),
-                              html.Br(),
-                              dcc.Link('Home', href='/')])  # end div
-                    ])  # end div
-                    
-
 
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
                              html.Br(),
                              html.Div([login]),
                              dcc.Link('Home', href='/')
-                             ])  # end div
-                   ])  # end div
+                             ])  
+                   ])  
 
 # logout
 logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
                    html.Br(),
-                   dcc.Link('Home', href='/')
-                   ])  # end div
+                   ])  
 
 # logout
 error404 = html.Div([html.Div(html.H2('Error 404 - page not found')),
                    html.Br(),
                    dcc.Link('Home', href='/')
-                   ])  # end div
+                   ])  
 
 
 app.layout = html.Div([
@@ -119,7 +110,6 @@ app.layout = html.Div([
     html.Br(),
     html.Div(id='page-content'),
 ])
-
 
 
 
@@ -206,14 +196,12 @@ def display_page(pathname):
     # We setup the defaults at the beginning, with redirect to dash.no_update; which simply means, just keep the requested url
     view = None
     url = dash.no_update
-    print('PATHNAME: ', pathname)
+
     if pathname == '/login':
         view = login
     elif pathname == '/success':
         if current_user.is_authenticated:
             view = home_page
-            
-
         else:
             view = failed
     elif pathname == '/logout':
