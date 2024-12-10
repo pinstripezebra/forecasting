@@ -24,6 +24,7 @@ repull_data = True
 
 # authentication
 username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
+db = os.getenv("SERVER")
 
 # defining path
 parent_path = os.path.dirname(os.path.dirname(__file__))

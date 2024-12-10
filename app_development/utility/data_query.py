@@ -6,6 +6,8 @@ from itertools import product
 import pandas as pd
 import os
 import pymysql 
+import pyodbc
+from dotenv import find_dotenv, load_dotenv
 
 
 
@@ -93,19 +95,38 @@ def data_pipeline(repull_data, latitude, longitude):
         df = pd.read_csv('C://Users//seelc//OneDrive//Desktop//Lucas Desktop Items//Projects//forecasting//app_development//Data//weather_data.csv')
     return df
 
-def query_database(host,user, password, db, query):
+def query_database(server,db, query):
 
     '''returns user login information for authentication purposes'''
-    conn = pymysql.connect( 
-        host=host, 
-        user=user,  
-        password = password, 
-        db=db, 
-        ) 
-      
-    connection = conn.cursor() 
-    df = pd.read_sql(query, connection) 
-    connection.close() 
+    #connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={db};UID={username};PWD={password}'
+    #conn = pyodbc.connect(connectionString) 
+    print(server)
+    print(db)
+    conn = pyodbc.connect('Driver={SQL Server};\
+                         Server=' + server + ';\
+                         Database=' + db + ';\
+                         Trusted_Connection=yes')
+
+    #connection = conn.cursor() 
+    df = pd.read_sql(query, conn) 
 
     return df
 
+query = 'app_development\queries\retrieve_users.txt'
+
+def read_file_into_string(filename):
+    with open(filename, 'r') as file:
+        content = file.read()
+    return content
+
+# Example usage
+dotenv_path = find_dotenv()
+load_dotenv(dotenv_path)
+filename = 'app_development\\queries\\retrieve_users.txt'
+query = read_file_into_string(filename)
+
+server = os.getenv("SERVER")
+db_name = os.getenv("DB_NAME")
+# querying database
+test = query_database(server, db_name, query)
+print(test)
