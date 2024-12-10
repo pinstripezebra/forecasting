@@ -19,7 +19,7 @@ from dotenv import find_dotenv, load_dotenv
 import os
 
 
-dash.register_page(__name__, path='/')
+dash.register_page(__name__, path='/landing')
 
 # loading environmental variables
 dotenv_path = find_dotenv()

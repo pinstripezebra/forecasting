@@ -80,12 +80,12 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   html.Br()])
 
 # Successful login
-'''
+
 success = html.Div([html.Div([html.H2('Login successful.'),
                               html.Br(),
                               dcc.Link('Home', href='/')])  # end div
                     ])  # end div
-                    '''
+                    
 
 
 # Failed Login
@@ -103,7 +103,7 @@ logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
                    ])  # end div
 
 # logout
-error404 = html.Div([html.Div(html.H2('test Error 404 - page not found')),
+error404 = html.Div([html.Div(html.H2('Error 404 - page not found')),
                    html.Br(),
                    dcc.Link('Home', href='/')
                    ])  # end div
@@ -177,8 +177,6 @@ home_page = html.Div([sidebar,
     ])
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
-
-
 @callback(
     [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
@@ -186,7 +184,8 @@ def login_button_click(n_clicks, username, password):
         if username == test_username and password == test_password:
             user = User(username)
             login_user(user)
-            return '/success', ''
+            # navigate to landing page if logged in successfully 
+            return '/landing', ''
         else:
             return '/login', 'Incorrect username or password'
 
@@ -207,7 +206,7 @@ def display_page(pathname):
     # We setup the defaults at the beginning, with redirect to dash.no_update; which simply means, just keep the requested url
     view = None
     url = dash.no_update
-    print('PATHNA<E: ', pathname)
+    print('PATHNAME: ', pathname)
     if pathname == '/login':
         view = login
     elif pathname == '/success':
@@ -224,16 +223,20 @@ def display_page(pathname):
         else:
             view = login
             url = '/login'
+
     
-    # if we're logged in and want to view home
-    elif pathname == '/home':
+    # if we're logged in and want to view one of the pages
+    elif pathname == '/analytic' or pathname == '/landing' or pathname == '/map':
         if current_user.is_authenticated:
             view = home_page
         else:
             view = 'Redirecting to login...'
             url = '/login'
+
+
     #else:
-    #    view = error404
+    else:
+        view = error404
     return view, url
 
 @callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])

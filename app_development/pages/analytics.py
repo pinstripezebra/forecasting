@@ -11,7 +11,7 @@ from dotenv import find_dotenv, load_dotenv
 from utility.measurement import find_optimal_window, return_nightimes
 from utility.chatbot import query_condition_description
 
-dash.register_page(__name__)
+dash.register_page(__name__, path='/analytic')
 
 # Note will need to pass these in from app
 df1 = pd.read_csv("C:/Users/seelc/OneDrive/Desktop/Lucas Desktop Items/Projects/forecasting/app_development/Data/weather_data.csv")

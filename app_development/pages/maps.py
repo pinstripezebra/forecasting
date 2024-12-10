@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 from dash import html, Dash, dcc, callback,Input, Output,dash_table, ctx
 
 
-dash.register_page(__name__)
+dash.register_page(__name__, path='/map')
 
 
 # Note will need to pass these in from app
