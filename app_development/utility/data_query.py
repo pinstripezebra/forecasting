@@ -5,6 +5,7 @@ from openmeteopy.options import ForecastOptions
 from itertools import product
 import pandas as pd
 import os
+import pymysql 
 
 
 
@@ -90,5 +91,21 @@ def data_pipeline(repull_data, latitude, longitude):
     # if we want to load old data
     else:
         df = pd.read_csv('C://Users//seelc//OneDrive//Desktop//Lucas Desktop Items//Projects//forecasting//app_development//Data//weather_data.csv')
+    return df
+
+def query_database(host,user, password, db, query):
+
+    '''returns user login information for authentication purposes'''
+    conn = pymysql.connect( 
+        host=host, 
+        user=user,  
+        password = password, 
+        db=db, 
+        ) 
+      
+    connection = conn.cursor() 
+    df = pd.read_sql(query, connection) 
+    connection.close() 
+
     return df
 
