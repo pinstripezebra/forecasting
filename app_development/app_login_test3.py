@@ -9,10 +9,11 @@ import os
 import numpy as np
 from dotenv import find_dotenv, load_dotenv
 import json
-from utility.data_query import data_pipeline
+from utility.data_query import data_pipeline, retrieve_users
 import dash_auth
 import flask
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+
 
 
 
@@ -23,7 +24,7 @@ LATITUDE, LONGITUDE = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE")
 repull_data = True
 
 # authentication
-test_username, test_password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
+users = retrieve_users()
 
 # defining path
 parent_path = os.path.dirname(os.path.dirname(__file__))
@@ -46,8 +47,7 @@ app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP]
 username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
 # Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
 server.config.update(SECRET_KEY=os.getenv('SECRET_KEY'))
-print(dash.page_registry)
-print(dash.page_registry.keys())
+
 # Login manager object will be used to login / logout users
 login_manager = LoginManager()
 login_manager.init_app(server)
@@ -171,7 +171,7 @@ home_page = html.Div([sidebar,
     [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
     if n_clicks > 0:
-        if username == test_username and password == test_password:
+        if username in users['username'].to_list() and password == users[users['username']== username]['password'].values:
             user = User(username)
             login_user(user)
             # navigate to landing page if logged in successfully 

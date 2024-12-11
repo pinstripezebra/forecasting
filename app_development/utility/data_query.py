@@ -95,13 +95,26 @@ def data_pipeline(repull_data, latitude, longitude):
         df = pd.read_csv('C://Users//seelc//OneDrive//Desktop//Lucas Desktop Items//Projects//forecasting//app_development//Data//weather_data.csv')
     return df
 
-def query_database(server,db, query):
+def read_file_into_string(filename):
+    with open(filename, 'r') as file:
+        content = file.read()
+    return content
+
+def retrieve_users():
 
     '''returns user login information for authentication purposes'''
-    #connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={db};UID={username};PWD={password}'
-    #conn = pyodbc.connect(connectionString) 
-    print(server)
-    print(db)
+
+    # retrieving query
+    dotenv_path = find_dotenv()
+    load_dotenv(dotenv_path)
+    filename = 'app_development\\queries\\retrieve_users.txt'
+    query = read_file_into_string(filename)
+
+    # retrieiving server + database information
+    server = os.getenv("SERVER")
+    db= os.getenv("DB_NAME")
+
+    # defining connection string
     conn = pyodbc.connect('Driver={SQL Server};\
                          Server=' + server + ';\
                          Database=' + db + ';\
@@ -112,21 +125,4 @@ def query_database(server,db, query):
 
     return df
 
-query = 'app_development\queries\retrieve_users.txt'
 
-def read_file_into_string(filename):
-    with open(filename, 'r') as file:
-        content = file.read()
-    return content
-
-# Example usage
-dotenv_path = find_dotenv()
-load_dotenv(dotenv_path)
-filename = 'app_development\\queries\\retrieve_users.txt'
-query = read_file_into_string(filename)
-
-server = os.getenv("SERVER")
-db_name = os.getenv("DB_NAME")
-# querying database
-test = query_database(server, db_name, query)
-print(test)
