@@ -15,8 +15,6 @@ import flask
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 
 
-
-
 # loading environmental variables
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)

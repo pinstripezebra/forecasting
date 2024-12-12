@@ -152,11 +152,26 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
         forecast_type = 'cloudcover'
     elif 'overall-click' == ctx.triggered_id:
         forecast_type = 'Forecast_Score'
-    time_fig = generate_timeseries_plot(filtered_df, 'time', forecast_type, s1, s2)
-  
 
-    return dbc.Col([
-                    draw_Image(time_fig)
+    # Creating graph figure
+    time_fig = generate_timeseries_plot(filtered_df, 'time', forecast_type, s1, s2)
+
+    # Creating table figure
+    my_datatable = dash_table.DataTable(data = filtered_df.to_dict('records'), 
+                                        columns = [{"name": i, "id": i} for i in filtered_df.columns],
+                                        page_size=10,
+                                        style_header={
+                                            'color': 'white'
+                                        },
+                                        style_table={'overflowX': 'scroll'})
+  
+    return dbc.Col([dbc.Row([
+                        draw_Image(time_fig)
+                        ]),
+                        dbc.Row([
+                            my_datatable
+
+                        ])
                 ], width={"size": 10, "offset": 0}),
 
 
