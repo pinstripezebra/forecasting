@@ -140,7 +140,6 @@ def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
         start = s2[i]
         # end is tomorrows sunrise
         end = s1[i]
-        print(start, end)
 
         # If both night start/end are within our forecast series
         if (start > min_time) and (end < max_time):

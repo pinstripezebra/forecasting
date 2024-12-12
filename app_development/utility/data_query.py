@@ -82,7 +82,6 @@ def data_pipeline(repull_data, latitude, longitude):
     df = ""
     parent_path = str(os.path.dirname(os.path.dirname(__file__)))
     total_path = parent_path + '//app_development//Data//' 
-    print(total_path)
     file_name = 'weather_data.csv'
 
     # repull data and save it

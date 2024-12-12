@@ -117,7 +117,14 @@ layout = html.Div([
                                                              #                df1['windspeed_10m'][0],
                                                               #               df1['cloudcover'][0]]))])
                         ])
-                    ])   
+                    ]) ,
+
+                dbc.Row([
+                    dbc.Col([
+                        # Div for datatable
+                        html.Div([], id = 'table-forecast-out')
+                    ])
+                ])  
                     
                 ])
         ]),
@@ -127,7 +134,8 @@ layout = html.Div([
 
 # callback for weekly forecast for individual series(temp, wind, etc)
 @callback(
-    Output(component_id='test-forecast-out', component_property='children'),
+    [Output(component_id='test-forecast-out', component_property='children'),
+     Output(component_id='table-forecast-out', component_property='children')],
     Input('forecast-click1', 'n_clicks'),
     Input('forecast-click2', 'n_clicks'),
     Input('temp-click', 'n_clicks'),
@@ -165,14 +173,10 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
                                         },
                                         style_table={'overflowX': 'scroll'})
   
-    return dbc.Col([dbc.Row([
-                        draw_Image(time_fig)
-                        ]),
-                    dbc.Row([
-                            draw_table(my_datatable)
-
-                    ])
-                ], width={"size": 10, "offset": 0}),
+    return [dbc.Col([draw_Image(time_fig)], width={"size": 10, "offset": 0}),
+            dbc.Col([draw_table(my_datatable)], width={"size": 10, "offset": 0})]
+    
+                
 
 
 # callback for kpi's
@@ -235,7 +239,6 @@ def set_active_forecast_window(*args):
 )
 def set_active_forecast_type(*args):
     ctx = dash.callback_context
-    print(ctx)
     if not ctx.triggered or not any(args):
        return ["btn"] + ["btn active"] + ["btn" for _ in range(1, 2)] 
 
