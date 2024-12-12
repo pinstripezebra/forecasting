@@ -88,8 +88,7 @@ def draw_table(input_figure, height = 450):
     return html.Div([
             dbc.Card(
                 dbc.CardBody([
-                    dcc.Graph(figure=input_figure
-                    ) 
+                    input_figure
                 ])
             , style = graph_card_style),  
         ])
