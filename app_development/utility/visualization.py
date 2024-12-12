@@ -82,6 +82,18 @@ def draw_Image(input_figure, height = 450):
             , style = graph_card_style),  
         ])
 
+def draw_table(input_figure, height = 450):
+    '''draw images returns a graph inside a card and div component'''
+
+    return html.Div([
+            dbc.Card(
+                dbc.CardBody([
+                    dcc.Graph(figure=input_figure
+                    ) 
+                ])
+            , style = graph_card_style),  
+        ])
+
 def draw_Text(input_text):
 
     return html.Div([

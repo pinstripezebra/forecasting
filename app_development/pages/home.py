@@ -10,7 +10,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import datetime
 import numpy as np
-from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_timeseries_plot, draw_Text_With_Background
+from utility.visualization import generate_run_plot, draw_Image, draw_Text, generate_timeseries_plot, draw_Text_With_Background, draw_table
 from utility.measurement import find_optimal_window, return_nightimes, get_current_conditions
 from utility.chatbot import query_condition_description
 import dash_daq as daq
@@ -168,10 +168,10 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
     return dbc.Col([dbc.Row([
                         draw_Image(time_fig)
                         ]),
-                        dbc.Row([
-                            my_datatable
+                    dbc.Row([
+                            draw_table(my_datatable)
 
-                        ])
+                    ])
                 ], width={"size": 10, "offset": 0}),
 
 
@@ -186,7 +186,6 @@ def update_kpi(val1, val2):
 
     filtered_df = df1
     filtered_df = get_current_conditions(filtered_df)
-    print(type(filtered_df))
     temp = filtered_df['temperature_2m']
     wind = filtered_df['windspeed_10m']
     cloud= filtered_df['cloudcover']
