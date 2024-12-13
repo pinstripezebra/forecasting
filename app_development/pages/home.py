@@ -119,12 +119,6 @@ layout = html.Div([
                         ])
                     ]) ,
 
-                dbc.Row([
-                    dbc.Col([
-                        # Div for datatable
-                        html.Div([], id = 'table-forecast-out')
-                    ])
-                ])  
                     
                 ])
         ]),
@@ -134,8 +128,7 @@ layout = html.Div([
 
 # callback for weekly forecast for individual series(temp, wind, etc)
 @callback(
-    [Output(component_id='test-forecast-out', component_property='children'),
-     Output(component_id='table-forecast-out', component_property='children')],
+    Output(component_id='test-forecast-out', component_property='children'),
     Input('forecast-click1', 'n_clicks'),
     Input('forecast-click2', 'n_clicks'),
     Input('temp-click', 'n_clicks'),
@@ -163,21 +156,10 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
 
     # Creating graph figure
     time_fig = generate_timeseries_plot(filtered_df, 'time', forecast_type, s1, s2)
-
-    # Creating table figure
-    my_datatable = dash_table.DataTable(data = filtered_df.to_dict('records'), 
-                                        columns = [{"name": i, "id": i} for i in filtered_df.columns],
-                                        page_size=10,
-                                        style_header={
-                                            'color': 'white'
-                                        },
-                                        style_table={'overflowX': 'scroll'})
   
-    return [dbc.Col([draw_Image(time_fig)], width={"size": 10, "offset": 0}),
-            dbc.Col([draw_table(my_datatable)], width={"size": 10, "offset": 0})]
+    return draw_Image(time_fig)
     
-                
-
+    
 
 # callback for kpi's
 @callback(
