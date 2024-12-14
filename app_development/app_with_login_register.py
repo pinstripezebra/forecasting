@@ -1,6 +1,6 @@
 # For data manipulation, visualization, app
 import dash
-from dash import Dash, dcc, html, callback, dash_table
+from dash import Dash, dcc, html, callback, dash_table, ctx
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -66,7 +66,10 @@ def load_user(username):
     return User(username)
 
 # Login screen
-login = html.Div([dcc.Location(id='url_login', refresh=True),
+login = html.Div([
+
+        # Login
+        html.Div([dcc.Location(id='url_login', refresh=True),
                   html.H2('''Please log in to continue:''', id='h1'),
                   dcc.Input(placeholder='Enter your username',
                             type='text', id='uname-box'),
@@ -75,8 +78,18 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   html.Button(children='Login', n_clicks=0,
                               type='submit', id='login-button'),
                   html.Div(children='', id='output-state'),
-                  html.Br()])
+                  html.Br()]),
 
+        # Registration
+        html.Div([html.H2('Dont have an account? Create yours now!', id='h1'),
+                  dbc.Button(children='Register', href="/register"),
+                  ])
+                ])
+
+# account creation
+register = layout = html.Div([
+    html.H1('Account Creation'),
+    dcc.Link('Home', href='/')])
 
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
@@ -163,6 +176,21 @@ home_page = html.Div([sidebar,
         ], style=CONTENT_STYLE)
     ])
 
+# Callback to update URL and send user to registraton page when registration
+# button is selected
+'''
+@callback([Output('url_login', 'pathname'), Output('output-state', 'children')],
+        Input('registration-button', 'n_clicks'))
+def register_user(n_clicks):
+    if n_clicks > 0:
+            return '/register', ''
+    return dash.no_update, dash.no_update  # Return a placeholder to indicate no update
+    '''
+    
+    
+
+
+
 # Callback function to login the user, or update the screen if the username or password are incorrect
 @callback(
     [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
@@ -179,9 +207,9 @@ def login_button_click(n_clicks, username, password):
     return dash.no_update, dash.no_update  # Return a placeholder to indicate no update
 
 # Main router
-
-@callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
-              [Input('url', 'pathname')])
+@callback(Output('page-content', 'children'), 
+          Output('redirect', 'pathname'),
+              Input('url', 'pathname'))
 def display_page(pathname):
     ''' callback to determine layout to return '''
     # We need to determine two things for everytime the user navigates:
@@ -193,6 +221,7 @@ def display_page(pathname):
     # We setup the defaults at the beginning, with redirect to dash.no_update; which simply means, just keep the requested url
     view = None
     url = dash.no_update
+    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
     if pathname == '/login':
         view = login
@@ -208,7 +237,7 @@ def display_page(pathname):
         else:
             view = login
             url = '/login'
-
+    
     
     # if we're logged in and want to view one of the pages
     elif pathname == '/analytic' or pathname == '/landing' or pathname == '/map':
@@ -217,6 +246,11 @@ def display_page(pathname):
         else:
             view = 'Redirecting to login...'
             url = '/login'
+    
+    # if we're not logged in and want to register
+    elif not current_user.is_authenticated and pathname == '/register':
+        view = register
+        #url = '/register'
 
 
     #else:
