@@ -40,7 +40,7 @@ with open(parent_path + '/app_development/style/content_style.json') as f:
 
 # defining and Initializing the app
 server = flask.Flask(__name__)
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], assets_folder='assets', assets_url_path='/assets/', server = server)
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.FLATLY], assets_folder='assets', assets_url_path='/assets/', server = server)
 #auth = dash_auth.BasicAuth(app,{username:password})
 username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
 # Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
