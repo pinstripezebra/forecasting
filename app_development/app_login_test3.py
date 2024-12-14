@@ -110,7 +110,6 @@ app.layout = html.Div([
 ])
 
 
-
 sidebar = html.Div(children = [
             html.Img(
                         alt="Link to Github",
@@ -121,7 +120,7 @@ sidebar = html.Div(children = [
             html.Hr(),
             html.Div([ 
                 dbc.Nav([
-                    dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values()
+                    dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values() if page['name'] != 'register'
                 ], vertical=True)
 
             ]),
