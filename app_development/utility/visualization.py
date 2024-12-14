@@ -117,11 +117,11 @@ def draw_Text_With_Background(input_text, input_img):
         dbc.CardImgOverlay(
             dbc.CardBody(
                 [
-                    html.H4(input_text, className="card-title"),
-                ],
+                    html.H3(input_text, className="card-title"),
+                ],style = {"display": "block", "text-align": "left", "margin-right": 0,"margin-left": 0, "width": "max-content", }
             ),
         ),
-    ],
+    ],color = 'red'
 )])
 
 def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
