@@ -86,10 +86,12 @@ login = html.Div([
                   ])
                 ])
 
-# account creation
-register = layout = html.Div([
-    html.H1('Account Creation'),
-    dcc.Link('Home', href='/')])
+
+
+# Registration using register.py
+register = html.Div([
+                dash.page_container
+        ])
 
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
