@@ -123,6 +123,7 @@ def draw_Text_With_Background(input_text, input_img):
         ),
     ],
 )])
+
 def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
 
 

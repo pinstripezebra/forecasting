@@ -3,8 +3,6 @@ sys.path.append("..")
 
 import dash
 from dash import html, Dash, dcc, callback,Input, Output,dash_table, ctx
-import folium
-from folium.plugins import HeatMap
 import pandas as pd
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -178,13 +176,13 @@ def update_kpi(val1, val2):
 
     return dbc.Row([
                     dbc.Col([
-                        draw_Text_With_Background("Temp: " + str(temp), "./assets/temperature.png")
+                        draw_Text_With_Background(str(temp) + chr(176) + "C", "./assets/temperature.png")
                     ], width=3),
                     dbc.Col([
-                            draw_Text_With_Background("Wind: " + str(wind), "./assets/wind.png")
+                            draw_Text_With_Background(str(wind) + 'KPH', "./assets/wind.png")
                     ], width=3),
                     dbc.Col([
-                            draw_Text_With_Background("Cloud: " + str(cloud), "./assets/clouds.png")
+                            draw_Text_With_Background(str(cloud) + '%', "./assets/clouds.png")
                     ], width=3),
                 ], style = {'margin-left': '0px',
                             "width": "80%",
