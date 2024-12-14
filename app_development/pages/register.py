@@ -35,7 +35,7 @@ layout = html.Div([
                                 type='password', id='register-pwd-box2')
                 ],style = {'align-items':'center', 'justify-content':'center', })
             ])
-        ], className='text-center', style={"width": "25rem"}),
+        ], className='text-center', style={"width": "25rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
         width={"offset": 4},
     )
 ], style=REGISTER_STYLE)

@@ -67,24 +67,29 @@ def load_user(username):
 
 # Login screen
 login = html.Div([
+    dbc.Col(
+        dbc.Card([
+            dbc.CardBody([
+                # Login
+                html.Div([dcc.Location(id='url_login', refresh=True),
+                        html.H2('''Please log in to continue:''', id='h1'),
+                        dcc.Input(placeholder='Enter your username',
+                                    type='text', id='uname-box'),
+                        dcc.Input(placeholder='Enter your password',
+                                    type='password', id='pwd-box'),
+                        html.Button(children='Login', n_clicks=0,
+                                    type='submit', id='login-button'),
+                        html.Div(children='', id='output-state'),
+                        html.Br()]),
 
-        # Login
-        html.Div([dcc.Location(id='url_login', refresh=True),
-                  html.H2('''Please log in to continue:''', id='h1'),
-                  dcc.Input(placeholder='Enter your username',
-                            type='text', id='uname-box'),
-                  dcc.Input(placeholder='Enter your password',
-                            type='password', id='pwd-box'),
-                  html.Button(children='Login', n_clicks=0,
-                              type='submit', id='login-button'),
-                  html.Div(children='', id='output-state'),
-                  html.Br()]),
-
-        # Registration
-        html.Div([html.H2('Dont have an account? Create yours now!', id='h1'),
-                  dbc.Button(children='Register', href="/register"),
-                  ])
-                ])
+                # Registration
+                html.Div([html.H2('Dont have an account? Create yours now!', id='h1'),
+                        dbc.Button(children='Register', href="/register"),
+                        ])
+            ])
+        ])
+    )
+])
 
 
 
@@ -104,12 +109,14 @@ failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
 # logout
 logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
                    html.Br(),
+                   html.Br(),
+                   dcc.Link('Login', href='/login')
                    ])  
 
 # logout
 error404 = html.Div([html.Div(html.H2('Error 404 - page not found')),
                    html.Br(),
-                   dcc.Link('Home', href='/')
+                   dcc.Link('Login', href='/login')
                    ])  
 
 
@@ -117,10 +124,6 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     dcc.Location(id='redirect', refresh=True),
     dcc.Store(id='login-status', storage_type='session'),
-    html.Div(id='user-status-div'),
-    html.Br(),
-    html.Hr(),
-    html.Br(),
     html.Div(id='page-content'),
 ])
 
@@ -178,18 +181,6 @@ home_page = html.Div([sidebar,
         ], style=CONTENT_STYLE)
     ])
 
-# Callback to update URL and send user to registraton page when registration
-# button is selected
-'''
-@callback([Output('url_login', 'pathname'), Output('output-state', 'children')],
-        Input('registration-button', 'n_clicks'))
-def register_user(n_clicks):
-    if n_clicks > 0:
-            return '/register', ''
-    return dash.no_update, dash.no_update  # Return a placeholder to indicate no update
-    '''
-    
-    
 
 
 
@@ -259,16 +250,16 @@ def display_page(pathname):
     else:
         view = error404
     return view, url
-
+'''
 @callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
 def login_status(url):
-    ''' callback to display login/logout link in the header '''
+    # callback to display login/logout link in the header 
     if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated \
             and url != '/logout':  # If the URL is /logout, then the user is about to be logged out anyways
         return dcc.Link('logout', href='/logout'), current_user.get_id()
     else:
         return dcc.Link('login', href='/login'), 'loggedout'
-
+'''
 
 # Running the app
 if __name__ == '__main__':
