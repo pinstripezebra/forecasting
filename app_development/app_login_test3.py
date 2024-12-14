@@ -109,7 +109,7 @@ app.layout = html.Div([
     html.Div(id='page-content'),
 ])
 
-
+print([page["relative_path"] for page in dash.page_registry.values()])
 sidebar = html.Div(children = [
             html.Img(
                         alt="Link to Github",
@@ -118,9 +118,9 @@ sidebar = html.Div(children = [
                     ),
             html.H3("Pages"),
             html.Hr(),
-            html.Div([ 
+            html.Div([   
                 dbc.Nav([
-                    dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values() if page['name'] != 'register'
+                    dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values() if page["relative_path"] != '/register'
                 ], vertical=True)
 
             ]),

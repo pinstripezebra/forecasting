@@ -7,3 +7,7 @@ import os
 
 
 dash.register_page(__name__, path='/register')
+
+
+layout = html.Div([
+    html.H1('Account Creation')])
