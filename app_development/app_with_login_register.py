@@ -31,11 +31,13 @@ parent_path = os.path.dirname(os.path.dirname(__file__))
 df1 = data_pipeline(repull_data, LATITUDE, LONGITUDE)
 
 # Loading json files containing component styles
-SIDEBAR_STYLE , CONTENT_STYLE = {}, {}
+SIDEBAR_STYLE , CONTENT_STYLE, LOGIN_STYLE = {}, {}, {}
 with open(parent_path + '/app_development/style/sidebar_style.json') as f:
     SIDEBAR_STYLE = json.load(f)
 with open(parent_path + '/app_development/style/content_style.json') as f:
     CONTENT_STYLE = json.load(f)
+with open(parent_path + '/app_development/style/login_style.json') as f:
+    LOGIN_STYLE = json.load(f)
 
 
 # defining and Initializing the app
@@ -75,8 +77,10 @@ login = html.Div([
                         html.H2('''Please log in to continue:''', id='h1'),
                         dcc.Input(placeholder='Enter your username',
                                     type='text', id='uname-box'),
+                        html.Br(),
                         dcc.Input(placeholder='Enter your password',
                                     type='password', id='pwd-box'),
+                        html.Br(),
                         html.Button(children='Login', n_clicks=0,
                                     type='submit', id='login-button'),
                         html.Div(children='', id='output-state'),
@@ -87,9 +91,10 @@ login = html.Div([
                         dbc.Button(children='Register', href="/register"),
                         ])
             ])
-        ])
+        ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
+        width={"offset": 4},
     )
-])
+], style = LOGIN_STYLE)
 
 
 
