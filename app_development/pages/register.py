@@ -4,11 +4,17 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 from dotenv import find_dotenv, load_dotenv
 import os
+import json
 
-
+# registering page
 dash.register_page(__name__, path='/register')
 
+# Loading json files containing registration pages style
+REGISTER_STYLE = {}
+with open('app_development\\style\\register_style.json') as f:
+    REGISTER_STYLE = json.load(f)
 
+# Defining page layout
 layout = html.Div([
     dbc.Col(
         dbc.Card([
@@ -27,9 +33,9 @@ layout = html.Div([
                     html.H5('Confirm Password'),
                     dcc.Input(placeholder='Confirm your password',
                                 type='password', id='register-pwd-box2')
-                ],style = {'align-items':'center', 'justify-content':'center'})
+                ],style = {'align-items':'center', 'justify-content':'center', })
             ])
         ], className='text-center', style={"width": "25rem"}),
         width={"offset": 4},
     )
-])
+], style=REGISTER_STYLE)
