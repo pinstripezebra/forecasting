@@ -174,15 +174,18 @@ def update_kpi(val1, val2):
     wind = filtered_df['windspeed_10m']
     cloud= filtered_df['cloudcover']
 
+    ideal_temp = os.getenv("OPTIMAL_TEMP")
+    ideal_wind = os.getenv("OPTIMAL_WIND")
+    ideal_cloud = os.getenv("OPTIMAL_CLOUD")
     return dbc.Row([
                     dbc.Col([
-                        draw_Text_With_Background(str(temp) + chr(176) + "C", "./assets/temperature.png")
+                        draw_Text_With_Background(temp, ideal_temp, chr(176) + "C", "./assets/temperature.png")
                     ], width=3),
                     dbc.Col([
-                            draw_Text_With_Background(str(wind) + 'KPH', "./assets/wind.png")
+                            draw_Text_With_Background(int(wind), ideal_wind,'KPH', "./assets/wind.png")
                     ], width=3),
                     dbc.Col([
-                            draw_Text_With_Background(str(cloud) + '%', "./assets/clouds.png")
+                            draw_Text_With_Background(int(cloud),ideal_cloud, '%', "./assets/clouds.png")
                     ], width=3),
                 ], style = {'margin-left': '0px',
                             "width": "80%",

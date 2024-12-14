@@ -105,7 +105,20 @@ def draw_Text(input_text):
             ,style = kpi_card_style),
         ])
 
-def draw_Text_With_Background(input_text, input_img):
+def draw_Text_With_Background(input_val, ideal_val, trailer, input_img):
+
+    '''
+    input_val: float value containing condition measurement
+    ideal_val: float value containing ideal measurement
+    trailer: text to append to end of input for display purposes (i.e. kmp, C, F, etc.)
+    input_img: image to use as background
+    '''
+
+    display_color = 'green'
+    if abs(float(input_val) - float(ideal_val)) > 10:
+        display_color = 'orange'
+    if abs(float(input_val) - float(ideal_val)) > 20:
+        display_color = 'red'
 
     return html.Div([dbc.Card(
     [
@@ -117,11 +130,11 @@ def draw_Text_With_Background(input_text, input_img):
         dbc.CardImgOverlay(
             dbc.CardBody(
                 [
-                    html.H3(input_text, className="card-title"),
+                    html.H3(str(input_val) + trailer, className="card-title"),
                 ],style = {"display": "block", "text-align": "left", "margin-right": 0,"margin-left": 0, "width": "max-content", }
             ),
         ),
-    ],color = 'red'
+    ],color = display_color
 )])
 
 def generate_timeseries_plot(df, x:str, y:str, s1: list, s2: list):
