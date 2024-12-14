@@ -13,21 +13,23 @@ layout = html.Div([
     dbc.Col(
         dbc.Card([
             dbc.CardBody([
-                html.H1('Account Creation'),
-                html.H5('Username'),
-                dcc.Input(placeholder='Enter your username',
-                                        type='text', id='register-uname-box'),
-                html.H5('Email'),
-                dcc.Input(placeholder='Enter your email',
-                                        type='text', id='register-email-box'),
-                html.H5('Password'),
-                dcc.Input(placeholder='Enter your password',
-                            type='password', id='register-pwd-box'),
-                html.H5('Confirm Password'),
-                dcc.Input(placeholder='Confirm your password',
-                            type='password', id='register-pwd-box2')
+                html.Div([
+                    html.H1('Account Creation'),
+                    html.H5('Username'),
+                    dcc.Input(placeholder='Enter your username',
+                                            type='text', id='register-uname-box'),
+                    html.H5('Email'),
+                    dcc.Input(placeholder='Enter your email',
+                                            type='text', id='register-email-box'),
+                    html.H5('Password'),
+                    dcc.Input(placeholder='Enter your password',
+                                type='password', id='register-pwd-box'),
+                    html.H5('Confirm Password'),
+                    dcc.Input(placeholder='Confirm your password',
+                                type='password', id='register-pwd-box2')
+                ],style = {'align-items':'center', 'justify-content':'center'})
             ])
-        ], style={"width": "25rem",'align': 'center'}),
+        ], className='text-center', style={"width": "25rem"}),
         width={"offset": 4},
     )
 ])
