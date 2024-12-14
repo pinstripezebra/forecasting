@@ -85,10 +85,10 @@ layout = html.Div([
                 dbc.Col([
                     html.Div([
                         html.H3('Current Conditions'),
-                        # Div for kpis
-                        html.Div([], id='kpi-indicators')
-
-                    ])
+                    ], style={'text-indent': '80px'}),
+                    # Div for kpis
+                    html.Div([], id='kpi-indicators')
+                    
                 ], style = {"display":"inline-block"})
             ])
 
@@ -142,7 +142,6 @@ def update_timeseries(button1, button2, button3, button4, button5, button6):
     if "forecast-click2" == ctx.triggered_id:
         filtered_df = df1[df1['time'].dt.date <  df1['time'].dt.date.min() + + datetime.timedelta(days=1)]
    
-
     time_fig = ""
     forecast_type = "temperature_2m"
     if 'wind-click'== ctx.triggered_id:
