@@ -67,36 +67,11 @@ def load_user(username):
     '''
     return User(username)
 
-# Login screen
+
+#login using login.py
 login = html.Div([
-    dbc.Col(
-        dbc.Card([
-            dbc.CardBody([
-                # Login
-                html.Div([dcc.Location(id='url_login', refresh=True),
-                        html.H2('''Please log in to continue:''', id='h1'),
-                        dcc.Input(placeholder='Enter your username',
-                                    type='text', id='uname-box'),
-                        html.Br(),
-                        dcc.Input(placeholder='Enter your password',
-                                    type='password', id='pwd-box'),
-                        html.Br(),
-                        html.Button(children='Login', n_clicks=0,
-                                    type='submit', id='login-button'),
-                        html.Div(children='', id='output-state'),
-                        html.Br()]),
-
-                # Registration
-                html.Div([html.H2('Dont have an account? Create yours now!', id='h1'),
-                        dbc.Button(children='Register', href="/register"),
-                        ])
-            ])
-        ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
-        width={"offset": 4},
-    )
-], style = LOGIN_STYLE)
-
-
+                dash.page_container
+        ])
 
 # Registration using register.py
 register = html.Div([
