@@ -31,12 +31,14 @@ parent_path = os.path.dirname(os.path.dirname(__file__))
 df1 = data_pipeline(repull_data, LATITUDE, LONGITUDE)
 
 # Loading json files containing component styles
-SIDEBAR_STYLE , CONTENT_STYLE, LOGIN_STYLE = {}, {}, {}
+SIDEBAR_STYLE , CONTENT_STYLE = {}, {}
 with open(parent_path + '/app_development/style/sidebar_style.json') as f:
     SIDEBAR_STYLE = json.load(f)
 with open(parent_path + '/app_development/style/content_style.json') as f:
     CONTENT_STYLE = json.load(f)
-with open(parent_path + '/app_development/style/login_style.json') as f:
+
+LOGIN_STYLE = {}
+with open('app_development\\style\\login_style.json') as f:
     LOGIN_STYLE = json.load(f)
 
 
@@ -54,7 +56,6 @@ login_manager.init_app(server)
 login_manager.login_view = '/login'
 
 # User data model. It has to have at least self.id as a minimum
-
 class User(UserMixin):
     def __init__(self, username):
         self.id = username
@@ -74,9 +75,10 @@ login = html.Div([
         ])
 
 # Registration using register.py
-register = html.Div([
+register = html.Div([html.Div([
                 dash.page_container
         ])
+], style=LOGIN_STYLE)
 
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
@@ -118,7 +120,7 @@ sidebar = html.Div(children = [
             html.Hr(),
             html.Div([   
                 dbc.Nav([
-                    dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values() if page["relative_path"] != '/register'
+                    dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values() if page["relative_path"] != '/register' and page["relative_path"] != '/login'
                 ], vertical=True)
 
             ]),
@@ -226,7 +228,6 @@ def display_page(pathname):
         #url = '/register'
 
 
-    #else:
     else:
         view = error404
     return view, url

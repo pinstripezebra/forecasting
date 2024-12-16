@@ -1,5 +1,8 @@
 {
-    "background-image": "url(/assets/login_background.png)",              
+    "background-image": "url(/assets/test_background.png)",              
     "background-repeat": "no-repeat",
-    "height": "1000px"
+    "background-position": "center center",
+    "background-size":"100% auto",
+    "height": "1100px"
+   
 }

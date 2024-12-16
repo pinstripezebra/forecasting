@@ -33,6 +33,7 @@ layout = html.Div([
                                     type='submit', id='login-button'),
                         html.Div(children='', id='output-state'),
                         html.Br()]),
+                        
 
                 # Registration
                 html.Div([html.H2('Dont have an account? Create yours now!', id='h1'),
@@ -42,4 +43,4 @@ layout = html.Div([
         ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
         width={"offset": 4},
     )
-], style = LOGIN_STYLE)
+], style=LOGIN_STYLE)

@@ -1,5 +1,7 @@
 {
     "background-image": "url(/assets/registration_background.png)",              
     "background-repeat": "no-repeat",
-    "height": "1000px"
+    "background-position": "center center",
+    "background-size":"100% auto",
+    "height": "1100px"
 }
