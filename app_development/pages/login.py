@@ -20,9 +20,16 @@ layout = html.Div([
     dbc.Col(
         dbc.Card([
             dbc.CardBody([
+                html.Img(
+                        alt="Link to Github",
+                        src="./assets/logo.png",
+                        style={'height':'3%', 'width':'16%', 'margin': 'auto', "opacity": '0.8','display': 'inline'}
+                    ),
+                    html.H3('Optirun', style={'display': 'inline' }),
                 # Login
                 html.Div([dcc.Location(id='url_login', refresh=True),
-                        html.H2('''Please log in to continue:''', id='h1'),
+                        html.H1('Welcome'),
+                        html.H4('''Please log in to continue:'''),
                         dcc.Input(placeholder='Enter your username',
                                     type='text', id='uname-box'),
                         html.Br(),
@@ -35,7 +42,7 @@ layout = html.Div([
                         
 
                 # Registration
-                html.Div([html.H2('Dont have an account? Create yours now!', id='h1'),
+                html.Div([html.H4('Dont have an account? Create yours now:', id='h1'),
                         dbc.Button(children='Register', href="/register"),
                         ])
             ])
@@ -52,6 +59,7 @@ layout = html.Div([
                                 className="mb-3",
                                 color="primary",
                                 n_clicks=0,
+                                style = {'width': '250px', 'text-align': 'left'}
                             ),
                             dbc.Collapse(
                                 html.Div(
@@ -62,6 +70,7 @@ layout = html.Div([
                                             className="mb-3",
                                             color="primary",
                                             n_clicks=0,
+                                            style = {'width': '250px', 'text-align': 'left'}
                                         ),
                                         dbc.Collapse(
                                             dbc.Card(dbc.CardBody("""Runcast forecasts running conditions over the next next 24 hours to 1 week, utilizing user preferences
@@ -76,6 +85,7 @@ layout = html.Div([
                                             className="mb-3",
                                             color="primary",
                                             n_clicks=0,
+                                            style={'width': '250px', 'text-align': 'left'}
                                         ),
                                         dbc.Collapse(
                                             dbc.Card(dbc.CardBody("""Runcast relies on user provided data, location and weather conditions, combined with open source 
@@ -89,9 +99,9 @@ layout = html.Div([
                                 id="collapse-primary",
                                 is_open=False,
                             )
-                ])
+                ],className='text-left')
             ])
-        ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
+        ],style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
         width={"offset": 4},
     )
 ], style=LOGIN_STYLE)

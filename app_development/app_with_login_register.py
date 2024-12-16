@@ -113,9 +113,10 @@ print([page["relative_path"] for page in dash.page_registry.values()])
 sidebar = html.Div(children = [
             html.Img(
                         alt="Link to Github",
-                        src="./assets/app_logo.png",
-                        style={'height':'10%', 'width':'40%', 'margin': 'auto'}
+                        src="./assets/logo.png",
+                        style={'height':'10%', 'width':'40%', 'margin': 'auto', "opacity": '0.8','display': 'inline' }
                     ),
+            html.H2('Optirun', style={'display': 'inline' }),
             html.H3("Pages"),
             html.Hr(),
             html.Div([   
