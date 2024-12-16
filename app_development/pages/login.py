@@ -46,37 +46,50 @@ layout = html.Div([
     dbc.Col(
         dbc.Card([
             dbc.CardBody([
-                html.Div(
-                    [
-                        dbc.Button(
-                            "What is Runcast?",
-                            id="collapse-button1",
-                            className="mb-3",
-                            color="primary",
-                            n_clicks=0,
-                        ),
-                        dbc.Collapse(
-                            dbc.Card(dbc.CardBody("""Runcast forecasts running conditions over the next next 24 hours to 1 week, utilizing user preferences
-                                                  and open source weather forecasts to help you identify the best running windows.""")),
-                            id="collapse1",
-                            is_open=False,
-                        ),
-                        html.Br(),
-                        dbc.Button(
-                            "What Data is Used?",
-                            id="collapse-button2",
-                            className="mb-3",
-                            color="primary",
-                            n_clicks=0,
-                        ),
-                        dbc.Collapse(
-                            dbc.Card(dbc.CardBody("""Runcast relies on user provided data, location and weather conditions, combined with open source 
-                                                  weather forecasts from Open-Meteo to generate cusomizable running forecasts.""")),
-                            id="collapse2",
-                            is_open=False,
-                        ),
-                    ]
-                )
+                html.Div([dbc.Button(
+                                "Commonly asked questions",
+                                id="collapse-button-primary",
+                                className="mb-3",
+                                color="primary",
+                                n_clicks=0,
+                            ),
+                            dbc.Collapse(
+                                html.Div(
+                                    [
+                                        dbc.Button(
+                                            "What is Runcast?",
+                                            id="collapse-button1",
+                                            className="mb-3",
+                                            color="primary",
+                                            n_clicks=0,
+                                        ),
+                                        dbc.Collapse(
+                                            dbc.Card(dbc.CardBody("""Runcast forecasts running conditions over the next next 24 hours to 1 week, utilizing user preferences
+                                                                and open source weather forecasts to help you identify the best running windows.""")),
+                                            id="collapse1",
+                                            is_open=False,
+                                        ),
+                                        html.Br(),
+                                        dbc.Button(
+                                            "What Data is Used?",
+                                            id="collapse-button2",
+                                            className="mb-3",
+                                            color="primary",
+                                            n_clicks=0,
+                                        ),
+                                        dbc.Collapse(
+                                            dbc.Card(dbc.CardBody("""Runcast relies on user provided data, location and weather conditions, combined with open source 
+                                                                weather forecasts from Open-Meteo to generate cusomizable running forecasts.""")),
+                                            id="collapse2",
+                                            is_open=False,
+                                        ),
+                                    ],
+
+                                ),
+                                id="collapse-primary",
+                                is_open=False,
+                            )
+                ])
             ])
         ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
         width={"offset": 4},
@@ -101,6 +114,18 @@ def toggle_collapse(n, is_open):
     [State("collapse2", "is_open")],
 )
 def toggle_collapse1(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+
+# Callback for Q&A collapse bottom
+@callback(
+    Output("collapse-primary", "is_open"),
+    [Input("collapse-button-primary", "n_clicks")],
+    [State("collapse-primary", "is_open")],
+)
+def toggle_collapse_primary(n, is_open):
     if n:
         return not is_open
     return is_open
