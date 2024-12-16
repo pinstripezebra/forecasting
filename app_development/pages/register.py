@@ -32,7 +32,11 @@ layout = html.Div([
                                 type='password', id='register-pwd-box'),
                     html.H5('Confirm Password'),
                     dcc.Input(placeholder='Confirm your password',
-                                type='password', id='register-pwd-box2')
+                                type='password', id='register-pwd-box2'),
+                    html.Br(),
+                    html.Br(),
+                    dbc.Button(children='Register', n_clicks=0,type='submit', id='Register-button')
+
                 ],style = {'align-items':'center', 'justify-content':'center', })
             ])
         ], className='text-center', style={"width": "25rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),

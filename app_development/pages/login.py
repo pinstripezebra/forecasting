@@ -1,5 +1,5 @@
 import dash
-from dash import html, Dash, dcc, callback,Input, Output,dash_table, ctx
+from dash import html, Dash, dcc, callback,Input, Output,dash_table, ctx, State
 import pandas as pd
 import dash_bootstrap_components as dbc
 from dotenv import find_dotenv, load_dotenv
@@ -29,8 +29,7 @@ layout = html.Div([
                         dcc.Input(placeholder='Enter your password',
                                     type='password', id='pwd-box'),
                         html.Br(),
-                        html.Button(children='Login', n_clicks=0,
-                                    type='submit', id='login-button'),
+                        dbc.Button(children='Login', n_clicks=0,type='submit', id='login-button'),
                         html.Div(children='', id='output-state'),
                         html.Br()]),
                         
@@ -42,5 +41,66 @@ layout = html.Div([
             ])
         ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
         width={"offset": 4},
+    ),
+
+    dbc.Col(
+        dbc.Card([
+            dbc.CardBody([
+                html.Div(
+                    [
+                        dbc.Button(
+                            "What is Runcast?",
+                            id="collapse-button1",
+                            className="mb-3",
+                            color="primary",
+                            n_clicks=0,
+                        ),
+                        dbc.Collapse(
+                            dbc.Card(dbc.CardBody("""Runcast forecasts running conditions over the next next 24 hours to 1 week, utilizing user preferences
+                                                  and open source weather forecasts to help you identify the best running windows.""")),
+                            id="collapse1",
+                            is_open=False,
+                        ),
+                        html.Br(),
+                        dbc.Button(
+                            "What Data is Used?",
+                            id="collapse-button2",
+                            className="mb-3",
+                            color="primary",
+                            n_clicks=0,
+                        ),
+                        dbc.Collapse(
+                            dbc.Card(dbc.CardBody("""Runcast relies on user provided data, location and weather conditions, combined with open source 
+                                                  weather forecasts from Open-Meteo to generate cusomizable running forecasts.""")),
+                            id="collapse2",
+                            is_open=False,
+                        ),
+                    ]
+                )
+            ])
+        ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
+        width={"offset": 4},
     )
 ], style=LOGIN_STYLE)
+
+# Callback for first collapse
+@callback(
+    Output("collapse1", "is_open"),
+    [Input("collapse-button1", "n_clicks")],
+    [State("collapse1", "is_open")],
+)
+def toggle_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+# Callback for second collapse
+@callback(
+    Output("collapse2", "is_open"),
+    [Input("collapse-button2", "n_clicks")],
+    [State("collapse2", "is_open")],
+)
+def toggle_collapse1(n, is_open):
+    if n:
+        return not is_open
+    return is_open
