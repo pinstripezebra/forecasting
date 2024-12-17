@@ -20,6 +20,12 @@ layout = html.Div([
         dbc.Card([
             dbc.CardBody([
                 html.Div([
+                    html.Img(
+                        alt="Link to Github",
+                        src="./assets/logo.png",
+                        style={'height':'3%', 'width':'16%', 'margin': 'auto', "opacity": '0.8','display': 'inline'}
+                    ),
+                    html.H3('Optirun', style={'display': 'inline' }),
                     html.H1('Account Creation'),
                     html.H5('Username'),
                     dcc.Input(placeholder='Enter your username',

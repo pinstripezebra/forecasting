@@ -69,7 +69,7 @@ def load_user(username):
     return User(username)
 
 
-#login using login.py
+# login using login.py
 login = html.Div([
                 dash.page_container
         ])
@@ -78,7 +78,13 @@ login = html.Div([
 register = html.Div([html.Div([
                 dash.page_container
         ])
-], style=LOGIN_STYLE)
+])
+
+# logout using logout.py
+logout = html.Div([html.Div([
+                dash.page_container
+        ])
+])
 
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
@@ -88,14 +94,7 @@ failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
                              ])  
                    ])  
 
-# logout
-logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
-                   html.Br(),
-                   html.Br(),
-                   dcc.Link('Login', href='/login')
-                   ])  
-
-# logout
+# error page
 error404 = html.Div([html.Div(html.H2('Error 404 - page not found')),
                    html.Br(),
                    dcc.Link('Login', href='/login')
