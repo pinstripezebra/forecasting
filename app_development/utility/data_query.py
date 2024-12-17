@@ -129,15 +129,16 @@ def insert_user(name: str, password: str, latitude: str, longitude: str):
     # retrieving query
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
-    filename = 'app_development\\queries\\retrieve_users.txt'
+    filename = 'app_development\\queries\\add_user.txt'
 
     # Passing input parameters
-    insertion = read_file_into_string(filename).format(name = name, 
-                                                   password = password,
-                                                   latitude = latitude,
-                                                   longitude = longitude,
-                                                   admin_status = 0)
-
+    insertion = read_file_into_string(filename)
+    insertion = insertion.format(name1 = "'test2'",
+                                 password1 = "'password1'",
+                                 latitude1 = "'100'",
+                                 longitude1 = "'100'",
+                                 admin_status1 = "'0'")
+    print(insertion)
     # retrieiving server + database information
     server = os.getenv("SERVER")
     db= os.getenv("DB_NAME")
@@ -152,3 +153,6 @@ def insert_user(name: str, password: str, latitude: str, longitude: str):
     cursor = conn.cursor()
     cursor.execute(insertion)
     conn.commit()
+
+
+insert_user('test2', 'test_psw', '100', '100')
