@@ -124,4 +124,31 @@ def retrieve_users():
 
     return df
 
+def insert_user(name: str, password: str, latitude: str, longitude: str):
 
+    # retrieving query
+    dotenv_path = find_dotenv()
+    load_dotenv(dotenv_path)
+    filename = 'app_development\\queries\\retrieve_users.txt'
+
+    # Passing input parameters
+    insertion = read_file_into_string(filename).format(name = name, 
+                                                   password = password,
+                                                   latitude = latitude,
+                                                   longitude = longitude,
+                                                   admin_status = 0)
+
+    # retrieiving server + database information
+    server = os.getenv("SERVER")
+    db= os.getenv("DB_NAME")
+
+    # defining connection string
+    conn = pyodbc.connect('Driver={SQL Server};\
+                         Server=' + server + ';\
+                         Database=' + db + ';\
+                         Trusted_Connection=yes')
+    
+    # defining cursor and executing insertion
+    cursor = conn.cursor()
+    cursor.execute(insertion)
+    conn.commit()
