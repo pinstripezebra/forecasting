@@ -8,6 +8,7 @@ import os
 import pymysql 
 import pyodbc
 from dotenv import find_dotenv, load_dotenv
+from geopy.geocoders import Nominatim
 
 
 
@@ -125,7 +126,9 @@ def retrieve_users():
     return df
 
 def insert_user(name: str, password: str, latitude: str, longitude: str):
-
+    """
+    Registers user to database
+    """
     # retrieving query
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
@@ -166,6 +169,18 @@ def insert_user(name: str, password: str, latitude: str, longitude: str):
         cursor = conn.cursor()
         cursor.execute(insertion)
         conn.commit()
+
+
+def search_address(address):
+
+    '''simple function for converting an address to latitude/longitude'''
+    
+    geolocator = Nominatim(user_agent="ram")
+    location = geolocator.geocode(address, timeout=10000, language = 'en')
+    if location:
+        return location.latitude, location.longitude
+    else:
+        return 0, 0
 
 
 insert_user('test2', 'test_psw', '100', '100')
