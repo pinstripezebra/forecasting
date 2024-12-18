@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 from dotenv import find_dotenv, load_dotenv
 import os
 import json
-#from utilities.data_manipulation import insert_user
+from utility.data_query import insert_user, search_address, validate_registration
 
 # registering page
 dash.register_page(__name__, path='/register')
@@ -40,6 +40,9 @@ layout = html.Div([
                     html.H5('Confirm Password'),
                     dcc.Input(placeholder='Confirm your password',
                                 type='password', id='register-pwd-box2'),
+                    html.H5('Address'),
+                    dcc.Input(placeholder='Enter your Address',
+                                type='text', id='address-box'),
                     html.Br(),
                     html.Br(),
                     dbc.Button(children='Register', n_clicks=0,type='submit', id='Register-button')
@@ -52,22 +55,29 @@ layout = html.Div([
 ], style=REGISTER_STYLE)
 
 # Callback for registering user
-'''
 @callback(
-    [Output("forecast-click1", "className"), 
-     Output("forecast-click2", "className")],
-    [Input("forecast-click1", "n_clicks"),
-     Input("forecast-click2", "n_clicks") ],
+    Output("forecast-click1", "className"),
+    [Input("Register-button'", "n_clicks"),
+     Input("register-uname-box", "value"),
+     Input("register-email-box", "value"),
+     Input("register-pwd-box", "value"),
+     Input("register-pwd-box2", "value"),
+     Input('address-box', "value")],
+    prevent_initial_call=True
 )
-def set_active_forecast_window(*args):
-    ctx = dash.callback_context
+def set_active_forecast_window(n_clicks, username, email, password1, password2, address):
+    
+    # extracting latitude/longitude from address
+    latitude, longitude = search_address(address)
 
-    if not ctx.triggered or not any(args):
-       return ["btn active"] + ["btn" for _ in range(1, 2)] 
-    # get id of triggering button
-    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    return [
-        "btn active" if button_id == "forecast-click1" else "btn",
-        "btn active" if button_id == "forecast-click2" else "btn" 
-    ]
-'''
+    # If all fields have been entered and registration button pressed
+    if None not in [username, email, email, password1, password2, address] and n_clicks > 0:
+        # If passwords match
+        if password1 == password2:
+            registration_error = validate_registration(username, password1, latitude, longitude)
+            if registration_error == "no error":
+                insert_user(username, password1, latitude, longitude)
+
+
+
+    

@@ -125,14 +125,11 @@ def retrieve_users():
 
     return df
 
-def insert_user(name: str, password: str, latitude: str, longitude: str):
-    """
-    Registers user to database
-    """
-    # retrieving query
-    dotenv_path = find_dotenv()
-    load_dotenv(dotenv_path)
-    filename = 'app_development\\queries\\add_user.txt'
+
+def validate_registration(name: str, password: str, latitude: str, longitude: str):
+
+    """Checks to ensure user registration information meets requirements"""
+
     error = ""
     if len(name) < 6:
         error = "Username must be at least 6 characters"
@@ -144,37 +141,47 @@ def insert_user(name: str, password: str, latitude: str, longitude: str):
         error = "password must contain a letter"
     elif not any(not c.isalnum() for c in password):
         error = "password must contain a special character"
-
-    # If username and password meet crition add user to database
     else:
-        # Passing input parameters
-        insertion = read_file_into_string(filename)
-        insertion = insertion.format(name1 = "'" + name + "'" ,
+        error = "no error"
+    return error
+
+def insert_user(name: str, password: str, latitude: str, longitude: str):
+    """
+    Registers user to database
+    """
+    # retrieving query
+    dotenv_path = find_dotenv()
+    load_dotenv(dotenv_path)
+    filename = 'app_development\\queries\\add_user.txt'
+
+    # Passing input parameters
+    insertion = read_file_into_string(filename)
+    insertion = insertion.format(name1 = "'" + name + "'" ,
                                     password1 = "'" + password + "'" ,
                                     latitude1 = "'" + latitude + "'" ,
                                     longitude1 = "'" + longitude + "'",
                                     admin_status1 = 0)
-        print(insertion)
-        # retrieiving server + database information
-        server = os.getenv("SERVER")
-        db= os.getenv("DB_NAME")
+    print(insertion)
+    # retrieiving server + database information
+    server = os.getenv("SERVER")
+    db= os.getenv("DB_NAME")
 
-        # defining connection string
-        conn = pyodbc.connect('Driver={SQL Server};\
+    # defining connection string
+    conn = pyodbc.connect('Driver={SQL Server};\
                             Server=' + server + ';\
                             Database=' + db + ';\
                             Trusted_Connection=yes')
         
-        # defining cursor and executing insertion
-        cursor = conn.cursor()
-        cursor.execute(insertion)
-        conn.commit()
+    # defining cursor and executing insertion
+    cursor = conn.cursor()
+    cursor.execute(insertion)
+    conn.commit()
 
 
 def search_address(address):
 
     '''simple function for converting an address to latitude/longitude'''
-    
+
     geolocator = Nominatim(user_agent="ram")
     location = geolocator.geocode(address, timeout=10000, language = 'en')
     if location:
