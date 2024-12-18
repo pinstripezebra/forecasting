@@ -130,29 +130,42 @@ def insert_user(name: str, password: str, latitude: str, longitude: str):
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
     filename = 'app_development\\queries\\add_user.txt'
+    error = ""
+    if len(name) < 6:
+        error = "Username must be at least 6 characters"
+    elif len(password) < 6:
+        error = "password must be at least 6 characters"
+    elif not any(char.isnumeric() for char in password):
+        error = "password must contain a number"
+    elif not any(char.isalpha() for char in password):
+        error = "password must contain a letter"
+    elif not any(not c.isalnum() for c in password):
+        error = "password must contain a special character"
 
-    # Passing input parameters
-    insertion = read_file_into_string(filename)
-    insertion = insertion.format(name1 = "'test2'",
-                                 password1 = "'password1'",
-                                 latitude1 = "'100'",
-                                 longitude1 = "'100'",
-                                 admin_status1 = "'0'")
-    print(insertion)
-    # retrieiving server + database information
-    server = os.getenv("SERVER")
-    db= os.getenv("DB_NAME")
+    # If username and password meet crition add user to database
+    else:
+        # Passing input parameters
+        insertion = read_file_into_string(filename)
+        insertion = insertion.format(name1 = "'" + name + "'" ,
+                                    password1 = "'" + password + "'" ,
+                                    latitude1 = "'" + latitude + "'" ,
+                                    longitude1 = "'" + longitude + "'",
+                                    admin_status1 = 0)
+        print(insertion)
+        # retrieiving server + database information
+        server = os.getenv("SERVER")
+        db= os.getenv("DB_NAME")
 
-    # defining connection string
-    conn = pyodbc.connect('Driver={SQL Server};\
-                         Server=' + server + ';\
-                         Database=' + db + ';\
-                         Trusted_Connection=yes')
-    
-    # defining cursor and executing insertion
-    cursor = conn.cursor()
-    cursor.execute(insertion)
-    conn.commit()
+        # defining connection string
+        conn = pyodbc.connect('Driver={SQL Server};\
+                            Server=' + server + ';\
+                            Database=' + db + ';\
+                            Trusted_Connection=yes')
+        
+        # defining cursor and executing insertion
+        cursor = conn.cursor()
+        cursor.execute(insertion)
+        conn.commit()
 
 
 insert_user('test2', 'test_psw', '100', '100')

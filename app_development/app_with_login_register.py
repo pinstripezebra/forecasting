@@ -231,7 +231,7 @@ def display_page(pathname):
     else:
         view = error404
     return view, url
-'''
+
 @callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
 def login_status(url):
     # callback to display login/logout link in the header 
@@ -240,7 +240,7 @@ def login_status(url):
         return dcc.Link('logout', href='/logout'), current_user.get_id()
     else:
         return dcc.Link('login', href='/login'), 'loggedout'
-'''
+
 
 # Running the app
 if __name__ == '__main__':

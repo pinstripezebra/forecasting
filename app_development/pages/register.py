@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 from dotenv import find_dotenv, load_dotenv
 import os
 import json
+#from utilities.data_manipulation import insert_user
 
 # registering page
 dash.register_page(__name__, path='/register')
@@ -49,3 +50,24 @@ layout = html.Div([
         width={"offset": 4},
     )
 ], style=REGISTER_STYLE)
+
+# Callback for registering user
+'''
+@callback(
+    [Output("forecast-click1", "className"), 
+     Output("forecast-click2", "className")],
+    [Input("forecast-click1", "n_clicks"),
+     Input("forecast-click2", "n_clicks") ],
+)
+def set_active_forecast_window(*args):
+    ctx = dash.callback_context
+
+    if not ctx.triggered or not any(args):
+       return ["btn active"] + ["btn" for _ in range(1, 2)] 
+    # get id of triggering button
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    return [
+        "btn active" if button_id == "forecast-click1" else "btn",
+        "btn active" if button_id == "forecast-click2" else "btn" 
+    ]
+'''
