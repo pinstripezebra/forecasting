@@ -45,7 +45,8 @@ layout = html.Div([
                                 type='text', id='address-box'),
                     html.Br(),
                     html.Br(),
-                    dbc.Button('Register', n_clicks=0,className="me-2", id='Register-button')
+                    dbc.Button('Register', n_clicks=0,className="me-2", id='Register-button'),
+                    html.Div(id="output_test"),
 
                 ],style = {'align-items':'center', 'justify-content':'center', })
             ])
@@ -58,11 +59,11 @@ layout = html.Div([
 @callback(
     Output("output_test", "children"),
     Input("Register-button", "n_clicks"),
-     Input("register-uname-box", "value"),
-     Input("register-email-box", "value"),
-     Input("register-pwd-box", "value"),
-     Input("register-pwd-box2", "value"),
-     Input('address-box', "value")
+    Input("register-uname-box", "value"),
+    Input("register-email-box", "value"),
+    Input("register-pwd-box", "value"),
+    Input("register-pwd-box2", "value"),
+    Input('address-box', "value")
 )
 def register_user_to_database(n_clicks, username, email, password1, password2, address):
     
@@ -76,9 +77,10 @@ def register_user_to_database(n_clicks, username, email, password1, password2, a
         if password1 == password2:
             print('here2')
             registration_error = validate_registration(username, password1, latitude, longitude)
+            print(registration_error)
             if registration_error == "no error":
                 print('here3')
-                insert_user(username, password1, latitude, longitude)
+                insert_user(username, password1, str(latitude), str(longitude))
     return f'Input 1 {username} and Input 2 {password1}'
 
 

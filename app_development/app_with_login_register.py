@@ -197,6 +197,7 @@ def display_page(pathname):
     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
     if pathname == '/login':
+        print("now on login page")
         view = login
     elif pathname == '/success':
         if current_user.is_authenticated:
@@ -221,9 +222,9 @@ def display_page(pathname):
             url = '/login'
     
     # if we're not logged in and want to register
-    elif not current_user.is_authenticated and pathname == '/register':
+    elif pathname == '/register':
+        print("now on register page")
         view = register
-        #url = '/register'
 
 
     else:

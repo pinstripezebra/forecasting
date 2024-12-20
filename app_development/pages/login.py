@@ -36,14 +36,14 @@ layout = html.Div([
                         dcc.Input(placeholder='Enter your password',
                                     type='password', id='pwd-box'),
                         html.Br(),
-                        dbc.Button(children='Login', n_clicks=0,type='submit', id='login-button'),
+                        dbc.Button('Login', n_clicks=0,type='submit', id='login-button'),
                         html.Div(children='', id='output-state'),
                         html.Br()]),
                         
 
                 # Registration
                 html.Div([html.H4('Dont have an account? Create yours now:', id='h1'),
-                        dbc.Button(children='Register', href="/register"),
+                        dbc.Button('Register', href="/register"),
                         ])
             ])
         ], className='text-center', style={"width": "30rem", 'background-color': 'rgba(245, 245, 245, 1)', 'opacity': '.8'}),
@@ -136,6 +136,7 @@ def toggle_collapse1(n, is_open):
     [State("collapse-primary", "is_open")],
 )
 def toggle_collapse_primary(n, is_open):
+    print("toggle")
     if n:
         return not is_open
     return is_open
