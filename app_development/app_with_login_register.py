@@ -75,9 +75,8 @@ login = html.Div([
         ])
 
 # Registration using register.py
-register = html.Div([html.Div([
+register = html.Div([
                 dash.page_container
-        ])
 ])
 
 # logout using logout.py
@@ -108,7 +107,6 @@ app.layout = html.Div([
     html.Div(id='page-content'),
 ])
 
-print([page["relative_path"] for page in dash.page_registry.values()])
 sidebar = html.Div(children = [
             html.Img(
                         alt="Link to Github",
@@ -203,8 +201,8 @@ def display_page(pathname):
     elif pathname == '/success':
         if current_user.is_authenticated:
             view = home_page
-        else:
-            view = failed
+        #else:
+        #    view = failed
     elif pathname == '/logout':
         if current_user.is_authenticated:
             logout_user()
@@ -231,7 +229,7 @@ def display_page(pathname):
     else:
         view = error404
     return view, url
-
+'''
 @callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
 def login_status(url):
     # callback to display login/logout link in the header 
@@ -240,8 +238,8 @@ def login_status(url):
         return dcc.Link('logout', href='/logout'), current_user.get_id()
     else:
         return dcc.Link('login', href='/login'), 'loggedout'
-
+'''
 
 # Running the app
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)

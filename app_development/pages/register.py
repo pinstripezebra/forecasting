@@ -45,7 +45,7 @@ layout = html.Div([
                                 type='text', id='address-box'),
                     html.Br(),
                     html.Br(),
-                    dbc.Button(children='Register', n_clicks=0,type='submit', id='Register-button')
+                    dbc.Button('Register', n_clicks=0,className="me-2", id='Register-button')
 
                 ],style = {'align-items':'center', 'justify-content':'center', })
             ])
@@ -56,28 +56,41 @@ layout = html.Div([
 
 # Callback for registering user
 @callback(
-    Output("forecast-click1", "className"),
-    [Input("Register-button'", "n_clicks"),
+    Output("output_test", "children"),
+    Input("Register-button", "n_clicks"),
      Input("register-uname-box", "value"),
      Input("register-email-box", "value"),
      Input("register-pwd-box", "value"),
      Input("register-pwd-box2", "value"),
-     Input('address-box', "value")],
-    prevent_initial_call=True
+     Input('address-box', "value")
 )
-def set_active_forecast_window(n_clicks, username, email, password1, password2, address):
+def register_user_to_database(n_clicks, username, email, password1, password2, address):
     
     # extracting latitude/longitude from address
     latitude, longitude = search_address(address)
-
+    print([username, email, email, password1, password2, address])
     # If all fields have been entered and registration button pressed
     if None not in [username, email, email, password1, password2, address] and n_clicks > 0:
+        print('here1')
         # If passwords match
         if password1 == password2:
+            print('here2')
             registration_error = validate_registration(username, password1, latitude, longitude)
             if registration_error == "no error":
+                print('here3')
                 insert_user(username, password1, latitude, longitude)
+    return f'Input 1 {username} and Input 2 {password1}'
 
+
+
+# Callback for registering user
+@callback(
+    Output("output_test", "text"),
+    Input("Register-button", "n_clicks"))
+
+def register_user_to_database_test(n_clicks):
+
+    print(n_clicks)
 
 
     

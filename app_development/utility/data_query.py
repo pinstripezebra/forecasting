@@ -190,4 +190,3 @@ def search_address(address):
         return 0, 0
 
 
-insert_user('test2', 'test_psw', '100', '100')
