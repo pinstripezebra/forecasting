@@ -40,13 +40,13 @@ layout = html.Div([
                     html.H5('Confirm Password'),
                     dcc.Input(placeholder='Confirm your password',
                                 type='password', id='register-pwd-box2'),
+                    html.Div(id="password-error"),
                     html.H5('Address'),
                     dcc.Input(placeholder='Enter your Address',
                                 type='text', id='address-box'),
                     html.Br(),
                     html.Br(),
                     dbc.Button('Register', n_clicks=0,className="me-2", id='Register-button'),
-                    html.Div(id="output_test"),
 
                 ],style = {'align-items':'center', 'justify-content':'center', })
             ])
@@ -57,7 +57,7 @@ layout = html.Div([
 
 # Callback for registering user
 @callback(
-    Output("output_test", "children"),
+    Output("password-error", "children"),
     Input("Register-button", "n_clicks"),
     Input("register-uname-box", "value"),
     Input("register-email-box", "value"),
@@ -69,6 +69,7 @@ def register_user_to_database(n_clicks, username, email, password1, password2, a
     
     # extracting latitude/longitude from address
     latitude, longitude = search_address(address)
+    registration_error = ""
     print([username, email, email, password1, password2, address])
     # If all fields have been entered and registration button pressed
     if None not in [username, email, email, password1, password2, address] and n_clicks > 0:
@@ -81,7 +82,12 @@ def register_user_to_database(n_clicks, username, email, password1, password2, a
             if registration_error == "no error":
                 print('here3')
                 insert_user(username, password1, str(latitude), str(longitude))
-    return f'Input 1 {username} and Input 2 {password1}'
+        else:
+            registration_error = "passwords must match"
+        
+    if registration_error == 'no error':
+        registration_error = ""
+    return html.Div([html.P(registration_error)])
 
 
 
