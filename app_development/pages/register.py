@@ -73,14 +73,11 @@ def register_user_to_database(n_clicks, username, email, password1, password2, a
     print([username, email, email, password1, password2, address])
     # If all fields have been entered and registration button pressed
     if None not in [username, email, email, password1, password2, address] and n_clicks > 0:
-        print('here1')
         # If passwords match
         if password1 == password2:
-            print('here2')
             registration_error = validate_registration(username, password1, latitude, longitude)
             print(registration_error)
             if registration_error == "no error":
-                print('here3')
                 insert_user(username, password1, str(latitude), str(longitude))
         else:
             registration_error = "passwords must match"
@@ -88,17 +85,6 @@ def register_user_to_database(n_clicks, username, email, password1, password2, a
     if registration_error == 'no error':
         registration_error = ""
     return html.Div([html.P(registration_error)])
-
-
-
-# Callback for registering user
-@callback(
-    Output("output_test", "text"),
-    Input("Register-button", "n_clicks"))
-
-def register_user_to_database_test(n_clicks):
-
-    print(n_clicks)
 
 
     
