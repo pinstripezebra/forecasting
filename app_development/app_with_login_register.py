@@ -110,6 +110,8 @@ sidebar = html.Div(children = [
 
             ]),
             html.H3("Login"),
+            html.Div([html.P(id = "welcome-user-id")]),
+
             html.Div([
                 dcc.Link('Logout', href='/logout'),
             ]),
@@ -123,11 +125,7 @@ sidebar = html.Div(children = [
                 "This project uses machine learning to forecast running conditions and provides a personalized running reccommendation time based on user preferences.", className="text"
             ),
 
-            html.H3("Code"
-            ),
-            html.P(
-                "The complete code for this project is available on github.", className="text"
-            ),
+            
             html.A(
                 href="https://github.com/pinstripezebra/Dash-Tutorial",
                 children=[
@@ -151,7 +149,8 @@ home_page = html.Div([sidebar,
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
 @callback(
-    [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
+    [Output('url_login', 'pathname'), Output('output-state', 'children')], 
+    [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
     if n_clicks > 0:
 
@@ -171,7 +170,9 @@ def login_button_click(n_clicks, username, password):
         else:
             return '/login', 'Incorrect username or password'
 
-    return dash.no_update, dash.no_update  # Return a placeholder to indicate no update
+    return dash.no_update, dash.no_update # Return a placeholder to indicate no update
+
+
 
 # Main router
 @callback(Output('page-content', 'children'), 
@@ -220,16 +221,17 @@ def display_page(pathname):
     else:
         view = error404
     return view, url
-'''
-@callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
+
+# callback to display username on sidebar
+@callback( Output('welcome-user-id', 'children'), 
+          [Input('url', 'pathname')],
+          suppress_callback_exceptions=True)
 def login_status(url):
-    # callback to display login/logout link in the header 
-    if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated \
-            and url != '/logout':  # If the URL is /logout, then the user is about to be logged out anyways
-        return dcc.Link('logout', href='/logout'), current_user.get_id()
+    if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated: 
+        return html.Div([html.P(current_user.id)])
     else:
-        return dcc.Link('login', href='/login'), 'loggedout'
-'''
+        return html.Div([""])
+
 
 # Running the app
 if __name__ == '__main__':
