@@ -21,6 +21,9 @@ layout = html.Div([
         dbc.Card([
             dbc.CardBody([
                 html.Div([
+                        dbc.Button('<-', href='/login'),
+                    ],style = {'float': 'left'}),
+                html.Div([
                     html.Img(
                         alt="Link to Github",
                         src="./assets/logo.png",
