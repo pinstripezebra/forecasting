@@ -1,4 +1,3 @@
-# For data manipulation, visualization, app
 import dash
 from dash import Dash, dcc, html, callback, dash_table, ctx
 from dash.dependencies import Input, Output, State
@@ -18,26 +17,16 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 # loading environmental variables
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
-#LATITUDE, LONGITUDE = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE"))
-latitude, longitude = 0, 0
 repull_data = True
 
 # authentication
 users = retrieve_users()
 
-# defining path
-parent_path = os.path.dirname(os.path.dirname(__file__))
-
-# loading Data
-#df1 = data_pipeline(repull_data, LATITUDE, LONGITUDE)
-df1 = ""
-data_pulled = False
-
 # Loading json files containing component styles
 SIDEBAR_STYLE , CONTENT_STYLE, LOGIN_STYLE = {}, {}, {}
-with open(parent_path + '/app_development/style/sidebar_style.json') as f:
+with open('app_development\\style\\sidebar_style.json') as f:
     SIDEBAR_STYLE = json.load(f)
-with open(parent_path + '/app_development/style/content_style.json') as f:
+with open('app_development\\style\\content_style.json') as f:
     CONTENT_STYLE = json.load(f)
 with open('app_development\\style\\login_style.json') as f:
     LOGIN_STYLE = json.load(f)
@@ -46,7 +35,7 @@ with open('app_development\\style\\login_style.json') as f:
 # defining and Initializing the app
 server = flask.Flask(__name__)
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.FLATLY], assets_folder='assets', assets_url_path='/assets/', server = server)
-username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
+
 # Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
 server.config.update(SECRET_KEY=os.getenv('SECRET_KEY'))
 
@@ -56,7 +45,7 @@ login_manager.init_app(server)
 login_manager.login_view = '/login'
 
 
-# User data model. It has to have at least self.id as a minimum
+# User data model
 class User(UserMixin):
     def __init__(self, username, password, latitude, longitude):
         self.id = username
@@ -67,9 +56,8 @@ class User(UserMixin):
 
 @ login_manager.user_loader
 def load_user(username):
-    ''' This function loads the user by user id. Typically this looks up the user from a user database.
-        We won't be registering or looking up users in this example, since we'll just login using LDAP server.
-        So we'll simply return a User object with the passed in username.
+    ''' This function loads the user by user id. It takes our username and looks up the users credentials
+    from the database before returning a user object created with those credentials
     '''
 
     # retrieving user information from database
@@ -81,14 +69,9 @@ def load_user(username):
 
 
 # login using login.py
-login = html.Div([
+login = register = html.Div([
                 dash.page_container
         ])
-
-# Registration using register.py
-register = html.Div([
-                dash.page_container
-])
 
 # logout using logout.py
 logout = html.Div([html.Div([
@@ -109,7 +92,6 @@ error404 = html.Div([html.Div(html.H2('Error 404 - page not found')),
                    html.Br(),
                    dcc.Link('Login', href='/login')
                    ])  
-
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -173,8 +155,6 @@ home_page = html.Div([sidebar,
     ])
 
 
-
-
 # Callback function to login the user, or update the screen if the username or password are incorrect
 @callback(
     [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
@@ -190,9 +170,8 @@ def login_button_click(n_clicks, username, password):
 
             # loging user in
             user = User(username, password, latitude, longitude)
-            #login_user(user, password, latitude, longitude)
-            login_user(user)#, password, latitude, longitude)
-            print('logged in')
+            login_user(user)
+
             # navigate to landing page if logged in successfully 
             return '/landing', ''
         else:
@@ -218,7 +197,6 @@ def display_page(pathname):
     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
     if pathname == '/login':
-        print("now on login page")
         view = login
     elif pathname == '/success':
         if current_user.is_authenticated:
@@ -236,11 +214,9 @@ def display_page(pathname):
     # if we're logged in and want to view one of the pages
     elif pathname == '/analytic' or pathname == '/landing' or pathname == '/map':
         if current_user.is_authenticated:
-            print(current_user.get_id())
-            print(current_user.latitude, current_user.longitude)
-            # if we havent pulled data then do so
-            df1 = data_pipeline(repull_data, current_user.latitude, current_user.longitude)
 
+            # pulling weather data
+            df1 = data_pipeline(repull_data, current_user.latitude, current_user.longitude)
             view = home_page
         else:
             view = 'Redirecting to login...'
@@ -250,7 +226,6 @@ def display_page(pathname):
     elif pathname == '/register':
         print("now on register page")
         view = register
-
 
     else:
         view = error404
