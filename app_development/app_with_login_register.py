@@ -17,7 +17,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 # loading environmental variables
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
-repull_data = True
+repull_data = False
 
 # authentication
 users = retrieve_users()
@@ -69,15 +69,9 @@ def load_user(username):
 
 
 # login using login.py
-login = register = html.Div([
+login = register = logout =  html.Div([
                 dash.page_container
         ])
-
-# logout using logout.py
-logout = html.Div([html.Div([
-                dash.page_container
-        ])
-])
 
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
@@ -198,10 +192,7 @@ def display_page(pathname):
 
     if pathname == '/login':
         view = login
-    elif pathname == '/success':
-        if current_user.is_authenticated:
-            view = home_page
-  
+
     elif pathname == '/logout':
         if current_user.is_authenticated:
             logout_user()
@@ -209,7 +200,6 @@ def display_page(pathname):
         else:
             view = login
             url = '/login'
-    
     
     # if we're logged in and want to view one of the pages
     elif pathname == '/analytic' or pathname == '/landing' or pathname == '/map':
