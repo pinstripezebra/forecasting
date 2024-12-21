@@ -18,7 +18,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 # loading environmental variables
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
-LATITUDE, LONGITUDE = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE"))
+#LATITUDE, LONGITUDE = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE"))
 repull_data = True
 
 # authentication
@@ -28,7 +28,9 @@ users = retrieve_users()
 parent_path = os.path.dirname(os.path.dirname(__file__))
 
 # loading Data
-df1 = data_pipeline(repull_data, LATITUDE, LONGITUDE)
+#df1 = data_pipeline(repull_data, LATITUDE, LONGITUDE)
+df1 = ""
+data_pulled = False
 
 # Loading json files containing component styles
 SIDEBAR_STYLE , CONTENT_STYLE, LOGIN_STYLE = {}, {}, {}
@@ -56,8 +58,12 @@ login_manager.login_view = '/login'
 
 # User data model. It has to have at least self.id as a minimum
 class User(UserMixin):
-    def __init__(self, username):
+    def __init__(self, username, password, latitude, longitude):
         self.id = username
+        self.password = password
+        self.latitude = latitude
+        self.longitude = longitude
+
 
 @ login_manager.user_loader
 def load_user(username):
@@ -216,6 +222,14 @@ def display_page(pathname):
     elif pathname == '/analytic' or pathname == '/landing' or pathname == '/map':
         if current_user.is_authenticated:
             print(current_user.get_id())
+
+            # if we havent pulled data then do so
+            if data_pulled == False:
+                latitude = current_user.get_latitude()
+                longitude = current_user.get_longitude()
+                df1 = data_pipeline(repull_data, latitude, longitude)
+                data_pulled = True
+
             view = home_page
         else:
             view = 'Redirecting to login...'
