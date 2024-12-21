@@ -19,6 +19,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 #LATITUDE, LONGITUDE = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE"))
+latitude, longitude = 0, 0
 repull_data = True
 
 # authentication
@@ -65,12 +66,18 @@ class User(UserMixin):
 
 
 @ login_manager.user_loader
-def load_user(username, password, latitude, longitude):
+def load_user(username):
     ''' This function loads the user by user id. Typically this looks up the user from a user database.
         We won't be registering or looking up users in this example, since we'll just login using LDAP server.
         So we'll simply return a User object with the passed in username.
     '''
-    return User(username, password, latitude, longitude)
+
+    # retrieving user information from database
+    user_df = retrieve_user_from_db(username)
+    latitude, longitude = float(user_df['latitude'].to_list()[0]), float(user_df['longitude'].to_list()[0])
+    password = user_df['password'].to_list()[0]
+
+    return User(username,password, latitude, longitude)
 
 
 # login using login.py
@@ -177,8 +184,15 @@ def login_button_click(n_clicks, username, password):
         # Returning user information from database
         user_df = retrieve_user_from_db(username)
         if username in user_df['username'].to_list() and password == user_df[user_df['username']== username]['password'].values:
-            user = User(username, user_df['password'].to_list()[0], user_df['latitude'].to_list()[0], user_df['longitude'].to_list()[0])
-            login_user(user)
+
+            # Extracting latitude/longitude from db query
+            latitude, longitude = float(user_df['latitude'].to_list()[0]), float(user_df['longitude'].to_list()[0])
+
+            # loging user in
+            user = User(username, password, latitude, longitude)
+            #login_user(user, password, latitude, longitude)
+            login_user(user)#, password, latitude, longitude)
+            print('logged in')
             # navigate to landing page if logged in successfully 
             return '/landing', ''
         else:
@@ -209,8 +223,7 @@ def display_page(pathname):
     elif pathname == '/success':
         if current_user.is_authenticated:
             view = home_page
-        #else:
-        #    view = failed
+  
     elif pathname == '/logout':
         if current_user.is_authenticated:
             logout_user()
@@ -224,13 +237,9 @@ def display_page(pathname):
     elif pathname == '/analytic' or pathname == '/landing' or pathname == '/map':
         if current_user.is_authenticated:
             print(current_user.get_id())
-
+            print(current_user.latitude, current_user.longitude)
             # if we havent pulled data then do so
-            if data_pulled == False:
-                latitude = current_user.get_latitude()
-                longitude = current_user.get_longitude()
-                df1 = data_pipeline(repull_data, latitude, longitude)
-                data_pulled = True
+            df1 = data_pipeline(repull_data, current_user.latitude, current_user.longitude)
 
             view = home_page
         else:
