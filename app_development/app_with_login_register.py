@@ -31,13 +31,11 @@ parent_path = os.path.dirname(os.path.dirname(__file__))
 df1 = data_pipeline(repull_data, LATITUDE, LONGITUDE)
 
 # Loading json files containing component styles
-SIDEBAR_STYLE , CONTENT_STYLE = {}, {}
+SIDEBAR_STYLE , CONTENT_STYLE, LOGIN_STYLE = {}, {}, {}
 with open(parent_path + '/app_development/style/sidebar_style.json') as f:
     SIDEBAR_STYLE = json.load(f)
 with open(parent_path + '/app_development/style/content_style.json') as f:
     CONTENT_STYLE = json.load(f)
-
-LOGIN_STYLE = {}
 with open('app_development\\style\\login_style.json') as f:
     LOGIN_STYLE = json.load(f)
 
@@ -54,6 +52,7 @@ server.config.update(SECRET_KEY=os.getenv('SECRET_KEY'))
 login_manager = LoginManager()
 login_manager.init_app(server)
 login_manager.login_view = '/login'
+
 
 # User data model. It has to have at least self.id as a minimum
 class User(UserMixin):
@@ -216,6 +215,7 @@ def display_page(pathname):
     # if we're logged in and want to view one of the pages
     elif pathname == '/analytic' or pathname == '/landing' or pathname == '/map':
         if current_user.is_authenticated:
+            print(current_user.get_id())
             view = home_page
         else:
             view = 'Redirecting to login...'
