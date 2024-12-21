@@ -101,6 +101,14 @@ sidebar = html.Div(children = [
                         style={'height':'10%', 'width':'40%', 'margin': 'auto', "opacity": '0.8','display': 'inline' }
                     ),
             html.H2('Optirun', style={'display': 'inline' }),
+            html.Br(),
+            html.Div([
+                html.H2(id = "welcome-user-id")]
+            ),
+
+            html.Div([
+                dcc.Link('Logout', href='/logout'),
+            ]),
             html.H3("Pages"),
             html.Hr(),
             html.Div([   
@@ -108,12 +116,6 @@ sidebar = html.Div(children = [
                     dbc.NavLink(f"{page['name']}", href = page["relative_path"]) for page in dash.page_registry.values() if page["relative_path"] != '/register' and page["relative_path"] != '/login'
                 ], vertical=True)
 
-            ]),
-            html.H3("Login"),
-            html.Div([html.P(id = "welcome-user-id")]),
-
-            html.Div([
-                dcc.Link('Logout', href='/logout'),
             ]),
             html.H3("Description"),
             html.P(
@@ -228,7 +230,7 @@ def display_page(pathname):
           suppress_callback_exceptions=True)
 def login_status(url):
     if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated: 
-        return html.Div([html.P(current_user.id)])
+        return html.H4("Welcome, {id}".format(id = current_user.id),style = {'display':'inline'})
     else:
         return html.Div([""])
 
