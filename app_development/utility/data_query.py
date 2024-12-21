@@ -188,5 +188,29 @@ def search_address(address):
         return location.latitude, location.longitude
     else:
         return 0, 0
+    
 
+def retrieve_user_from_db(username):
 
+    '''returns login information for single user'''
+
+    # retrieving query
+    dotenv_path = find_dotenv()
+    load_dotenv(dotenv_path)
+    filename = 'app_development\\queries\\retrieve_user.txt'
+    query = read_file_into_string(filename).format(username = "'" + username + "'")
+
+    # retrieiving server + database information
+    server = os.getenv("SERVER")
+    db= os.getenv("DB_NAME")
+
+    # defining connection string
+    conn = pyodbc.connect('Driver={SQL Server};\
+                         Server=' + server + ';\
+                         Database=' + db + ';\
+                         Trusted_Connection=yes')
+
+    #connection = conn.cursor() 
+    df = pd.read_sql(query, conn) 
+
+    return df

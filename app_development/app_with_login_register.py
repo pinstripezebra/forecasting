@@ -9,7 +9,7 @@ import os
 import numpy as np
 from dotenv import find_dotenv, load_dotenv
 import json
-from utility.data_query import data_pipeline, retrieve_users
+from utility.data_query import data_pipeline, retrieve_users, retrieve_user_from_db
 import dash_auth
 import flask
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
@@ -45,7 +45,6 @@ with open('app_development\\style\\login_style.json') as f:
 # defining and Initializing the app
 server = flask.Flask(__name__)
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.FLATLY], assets_folder='assets', assets_url_path='/assets/', server = server)
-#auth = dash_auth.BasicAuth(app,{username:password})
 username, password = os.getenv("ADMIN_USERNAME"), os.getenv("ADMIN_PASSWORD")
 # Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
 server.config.update(SECRET_KEY=os.getenv('SECRET_KEY'))
@@ -66,12 +65,12 @@ class User(UserMixin):
 
 
 @ login_manager.user_loader
-def load_user(username):
+def load_user(username, password, latitude, longitude):
     ''' This function loads the user by user id. Typically this looks up the user from a user database.
         We won't be registering or looking up users in this example, since we'll just login using LDAP server.
         So we'll simply return a User object with the passed in username.
     '''
-    return User(username)
+    return User(username, password, latitude, longitude)
 
 
 # login using login.py
@@ -174,8 +173,11 @@ home_page = html.Div([sidebar,
     [Output('url_login', 'pathname'), Output('output-state', 'children')], [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
     if n_clicks > 0:
-        if username in users['username'].to_list() and password == users[users['username']== username]['password'].values:
-            user = User(username)
+
+        # Returning user information from database
+        user_df = retrieve_user_from_db(username)
+        if username in user_df['username'].to_list() and password == user_df[user_df['username']== username]['password'].values:
+            user = User(username, user_df['password'].to_list()[0], user_df['latitude'].to_list()[0], user_df['longitude'].to_list()[0])
             login_user(user)
             # navigate to landing page if logged in successfully 
             return '/landing', ''
